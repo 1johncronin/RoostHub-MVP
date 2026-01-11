@@ -2,6 +2,50 @@ import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import { MapPin, Calendar, Clock, Share2, Heart, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
+import { Metadata, ResolvingMetadata } from 'next';
+
+type Props = {
+  params: Promise<{ id: string }>;
+};
+
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { id } = await params;
+  const supabase = await createClient();
+
+  const { data: listing } = await supabase
+    .from('listings')
+    .select('*, machines(year, make, model), listing_media(url)')
+    .eq('id', id)
+    .single();
+
+  if (!listing) {
+    return { title: 'Listing Not Found | RoostHub' };
+  }
+
+  const title = `${listing.title} | RoostHub`;
+  const description = listing.description || `Buy this ${listing.type} on RoostHub.`;
+  const image = listing.listing_media?.[0]?.url || '/og-placeholder.png';
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [image],
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [image],
+    },
+  };
+}
 
 export default async function ListingDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

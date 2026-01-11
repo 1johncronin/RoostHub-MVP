@@ -28,6 +28,11 @@ const teko = Teko({
 export const metadata: Metadata = {
   title: "RoostHub | Marketplace for Dirt & Snow",
   description: "Buy, sell, and showcase your dirt bikes, snowmobiles, and gear.",
+  manifest: "/manifest.json",
+};
+
+export const viewport = {
+  themeColor: "#6B2CF5",
 };
 
 export default function RootLayout({
