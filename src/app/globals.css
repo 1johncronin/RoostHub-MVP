@@ -52,38 +52,38 @@
   --ring: 263 90% 50%;
 }
 
-/* Brand Theme Overrides (Applied to body to override :root and .dark) */
-body[data-brand="ktm"], [data-brand="ktm"] body {
+/* Brand Theme Overrides (Targeting HTML for Global Priority) */
+:root[data-brand="ktm"], html[data-brand="ktm"] {
   --primary: 23 100% 50% !important; 
   --ring: 23 100% 50% !important;
-  --primary-foreground: 0 0% 0% !important; /* Black text on Orange */
+  --primary-foreground: 0 0% 0% !important;
 }
-body[data-brand="yamaha"], [data-brand="yamaha"] body {
+:root[data-brand="yamaha"], html[data-brand="yamaha"] {
   --primary: 217 100% 50% !important;
   --ring: 217 100% 50% !important;
   --primary-foreground: 0 0% 100% !important;
 }
-body[data-brand="honda"], [data-brand="honda"] body {
+:root[data-brand="honda"], html[data-brand="honda"] {
   --primary: 0 100% 50% !important;
   --ring: 0 100% 50% !important;
   --primary-foreground: 0 0% 100% !important;
 }
-body[data-brand="kawasaki"], [data-brand="kawasaki"] body {
+:root[data-brand="kawasaki"], html[data-brand="kawasaki"] {
   --primary: 85 100% 50% !important;
   --ring: 85 100% 50% !important;
-  --primary-foreground: 0 0% 0% !important; /* Black text on Lime */
+  --primary-foreground: 0 0% 0% !important;
 }
-body[data-brand="suzuki"], [data-brand="suzuki"] body {
+:root[data-brand="suzuki"], html[data-brand="suzuki"] {
   --primary: 50 100% 50% !important;
   --ring: 50 100% 50% !important;
-  --primary-foreground: 0 0% 0% !important; /* Black text on Yellow */
+  --primary-foreground: 0 0% 0% !important;
 }
-body[data-brand="husqvarna"], [data-brand="husqvarna"] body {
+:root[data-brand="husqvarna"], html[data-brand="husqvarna"] {
   --primary: 200 100% 30% !important;
   --ring: 200 100% 30% !important;
   --primary-foreground: 0 0% 100% !important;
 }
-body[data-brand="gasgas"], [data-brand="gasgas"] body {
+:root[data-brand="gasgas"], html[data-brand="gasgas"] {
   --primary: 0 100% 40% !important;
   --ring: 0 100% 40% !important;
   --primary-foreground: 0 0% 100% !important;

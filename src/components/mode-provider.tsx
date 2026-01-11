@@ -17,46 +17,54 @@ export function ModeProvider({ children, initialBrand = 'roosthub' }: { children
   const [mode, setMode] = useState<VisualMode>('normal');
   const [brand, setBrand] = useState(initialBrand);
 
+  // Sync state if initialBrand changes (e.g. on navigation)
   useEffect(() => {
-    document.body.setAttribute('data-brand', brand);
+    setBrand(initialBrand);
+  }, [initialBrand]);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-brand', brand);
   }, [brand]);
 
   return (
     <ModeContext.Provider value={{ mode, setMode, brand, setBrand }}>
-      <div className="relative min-h-screen font-sans">
+      <div className="relative min-h-screen font-sans overflow-x-hidden">
         {children}
         
-        {/* Winter Mode: Ground Snow Effect */}
+        {/* Winter Mode: High-Fidelity Ground Snow Effect */}
         {mode === 'winter' && (
-            <div className="fixed bottom-0 left-0 right-0 pointer-events-none z-[100] h-32 select-none">
-                {/* Subtle Snow Drifts */}
-                <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute bottom-0 w-full drop-shadow-[0_-10px_30px_rgba(255,255,255,0.3)]">
+            <div className="fixed bottom-0 left-0 right-0 pointer-events-none z-[100] select-none h-40">
+                <svg viewBox="0 0 1440 120" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute bottom-0 w-full h-full drop-shadow-[0_-5px_15px_rgba(255,255,255,0.4)]">
                     <path 
                         d="M0 120L1440 120V60C1200 40 1000 80 720 60C440 40 240 80 0 60V120Z" 
                         fill="white" 
-                        className="opacity-90"
+                        className="opacity-95"
                     />
                     <path 
-                        d="M0 120L1440 120V80C1100 60 900 100 720 80C540 60 300 100 0 80V120Z" 
-                        fill="white" 
-                        className="opacity-60"
+                        d="M0 120L1440 120V85C1100 65 900 105 720 85C540 65 300 105 0 85V120Z" 
+                        fill="#f8fafc" 
+                        className="opacity-80"
                     />
+                    {/* Add some sparkly bits */}
+                    <circle cx="200" cy="70" r="2" fill="white" className="animate-pulse" />
+                    <circle cx="600" cy="90" r="1.5" fill="white" className="animate-pulse" />
+                    <circle cx="1100" cy="65" r="2.5" fill="white" className="animate-pulse" />
                 </svg>
             </div>
         )}
 
         {/* Dirty Mode: Mud Splatter Overlay */}
         {mode === 'dirty' && (
-            <div className="fixed inset-0 pointer-events-none z-[100] opacity-40 mix-blend-multiply">
-                {Array.from({ length: 15 }).map((_, i) => (
+            <div className="fixed inset-0 pointer-events-none z-[100] opacity-30 mix-blend-multiply overflow-hidden">
+                {Array.from({ length: 12 }).map((_, i) => (
                     <div 
                         key={i} 
-                        className="absolute bg-[#4a3721] rounded-full blur-xl"
+                        className="absolute bg-[#3e2723] rounded-full blur-2xl"
                         style={{
-                            width: `${Math.random() * 200 + 50}px`,
-                            height: `${Math.random() * 150 + 30}px`,
-                            left: `${Math.random() * 100}%`,
-                            top: `${Math.random() * 100}%`,
+                            width: `${Math.random() * 300 + 100}px`,
+                            height: `${Math.random() * 200 + 50}px`,
+                            left: `${Math.random() * 110 - 5}%`,
+                            top: `${Math.random() * 110 - 5}%`,
                             transform: `rotate(${Math.random() * 360}deg) scale(${Math.random() + 0.5})`,
                         }}
                     />

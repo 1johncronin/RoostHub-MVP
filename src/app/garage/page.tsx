@@ -22,7 +22,7 @@ export default async function GaragePage({
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('*')
+    .select('*, invite_codes(code)')
     .eq('id', user.id)
     .single();
 
@@ -31,6 +31,8 @@ export default async function GaragePage({
     .select('*, machines(*), maintenance_logs(*)')
     .eq('seller_id', user.id)
     .order('created_at', { ascending: false });
+
+  const inviteCode = (profile as any)?.invite_codes?.[0]?.code || 'PENDING';
 
   return (
     <div className="container py-8 max-w-5xl min-h-screen">
@@ -193,7 +195,7 @@ export default async function GaragePage({
             <h2 className="text-4xl font-black italic uppercase font-space-grotesk tracking-tighter leading-none text-foreground">Invite a friend, <br />get a <span className="text-primary">free boost</span>.</h2>
             <p className="text-muted-foreground font-medium">Grow the RoostHub community. When your friend joins, we'll drop a free $19 Featured Listing credit in your garage.</p>
             
-            <InviteForm />
+            <InviteForm inviteCode={inviteCode} />
         </div>
       </div>
     </div>
