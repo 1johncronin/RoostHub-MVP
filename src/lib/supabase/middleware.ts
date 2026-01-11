@@ -37,15 +37,15 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/auth') &&
-    !request.nextUrl.pathname.startsWith('/') && // Allow landing page
-    !request.nextUrl.pathname.startsWith('/marketplace') && // Allow viewing marketplace
-    !request.nextUrl.pathname.startsWith('/search') // Allow search
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
+  const isAuthPage = request.nextUrl.pathname.startsWith('/login') || 
+                     request.nextUrl.pathname.startsWith('/auth')
+  
+  const isPublicPage = request.nextUrl.pathname === '/' ||
+                       request.nextUrl.pathname.startsWith('/marketplace') ||
+                       request.nextUrl.pathname.startsWith('/search') ||
+                       request.nextUrl.pathname.startsWith('/listing')
+
+  if (!user && !isAuthPage && !isPublicPage) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
