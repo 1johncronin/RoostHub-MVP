@@ -11,6 +11,16 @@ export async function Navbar() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
+  let profile = null;
+  if (user) {
+    const { data } = await supabase
+      .from('profiles')
+      .select('avatar_url, username')
+      .eq('id', user.id)
+      .single();
+    profile = data;
+  }
+
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
@@ -53,8 +63,12 @@ export async function Navbar() {
           
           {user ? (
             <div className="flex items-center gap-2">
-                <Link href="/garage" className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-xs border border-primary/20">
-                    {user.email?.[0].toUpperCase()}
+                <Link href="/garage" className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-xs border border-primary/20 overflow-hidden">
+                    {profile?.avatar_url ? (
+                        <img src={profile.avatar_url} alt={profile.username || 'User'} className="w-full h-full object-cover" />
+                    ) : (
+                        user.email?.[0].toUpperCase()
+                    )}
                 </Link>
                 <form action={signout}>
                     <button type="submit" className="p-2 text-muted-foreground hover:text-destructive transition-colors">
