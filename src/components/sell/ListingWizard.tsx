@@ -364,7 +364,8 @@ export function ListingWizard({ userId }: WizardProps) {
 
         {step === 3 && (
           <div className="space-y-6">
-            <h2 className="text-3xl font-black italic uppercase font-space-grotesk text-primary">Media</h2>
+            <h2 className="text-3xl font-black italic uppercase font-space-grotesk text-primary">Media & Details</h2>
+            
             <div 
                 onClick={() => document.getElementById('file-upload')?.click()}
                 className="border-4 border-dashed border-border rounded-3xl p-16 text-center hover:bg-primary/5 hover:border-primary/50 transition-all cursor-pointer flex flex-col items-center justify-center group"
@@ -376,7 +377,7 @@ export function ListingWizard({ userId }: WizardProps) {
                     {isVisionThinking ? 'Roost Intelligence is Analyzing...' : files.length > 0 ? `${files.length} Files Selected` : 'Drop photos here'}
                 </p>
                 {isVisionThinking && <Loader2 className="h-6 w-6 animate-spin text-primary mt-4" />}
-                {!isVisionThinking && <p className="text-sm text-muted-foreground font-medium mt-2">Up to 10 photos + 1 high-res video clip</p>}
+                {!isVisionThinking && <p className="text-sm text-muted-foreground font-medium mt-2">The more photos, the faster it sells.</p>}
                 <input 
                     id="file-upload"
                     type="file" 
@@ -386,6 +387,20 @@ export function ListingWizard({ userId }: WizardProps) {
                     className="hidden" 
                 />
             </div>
+
+            {/* Description Field - Now in Step 3 */}
+            <div className="space-y-2 pt-4">
+                <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground">Description</label>
+                <textarea 
+                    name="description" 
+                    value={formData.description} 
+                    onChange={handleChange} 
+                    className="w-full p-4 rounded-2xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-medium min-h-[150px]" 
+                    placeholder="Describe modifications, recent service, and overall condition..."
+                />
+                <p className="text-[10px] text-muted-foreground font-bold italic uppercase tracking-tighter">AI will automatically append mods if you upload a photo above.</p>
+            </div>
+
             {files.length > 0 && (
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
                     {files.map((f, i) => (
