@@ -41,14 +41,14 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://roosthub.com'),
   title: "RoostHub | Marketplace for Dirt & Snow",
   description: "Buy, sell, and showcase your dirt bikes, snowmobiles, and gear.",
-  manifest: "/manifest.json?v=2",
+  manifest: "/manifest.json?v=3",
   icons: {
     icon: [
-      { url: "/favicon.ico?v=2" },
-      { url: "/favicon.png?v=2", type: "image/png" },
+      { url: "/favicon.ico?v=3" },
+      { url: "/favicon.png?v=3", type: "image/png" },
     ],
     apple: [
-      { url: "/icon-512.png?v=2" },
+      { url: "/icon-512.png?v=3" },
     ],
   },
   appleWebApp: {
