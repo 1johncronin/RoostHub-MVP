@@ -43,17 +43,21 @@ export const viewport = {
 
 import { ThemeProvider } from "@/components/theme-provider";
 
-
+import { Plus } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/server";
 
-
-
-
+import Link from "next/link";
 
 
 
 export default async function RootLayout({
+
+
+
+
+
+
 
 
 
@@ -147,14 +151,34 @@ export default async function RootLayout({
 
         >
 
-          {children}
+                    {children}
 
-        </ThemeProvider>
+                    
 
-      </body>
+                    {/* Mobile FAB for Selling */}
 
-    </html>
+                    <Link 
 
-  );
+                      href="/sell" 
 
-}
+                      className="md:hidden fixed bottom-6 right-6 h-14 w-14 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl shadow-primary/40 z-50 animate-bounce-slow border-2 border-white/20"
+
+                    >
+
+                      <Plus className="h-8 w-8" />
+
+                    </Link>
+
+                  </ThemeProvider>
+
+                </body>
+
+              </html>
+
+              );
+
+            }
+
+            
+
+          
