@@ -6,9 +6,7 @@ import { cn } from "@/lib/utils";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col font-sans">
-      <Navbar />
-      
+    <div className="flex flex-col font-sans">
       <main className="flex-1">
         {/* Hero Section */}
         <section className="relative py-24 md:py-40 overflow-hidden bg-background">
@@ -49,41 +47,78 @@ export default function Home() {
           <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
         </section>
 
-        {/* Categories Grid */}
-        <section className="py-24 bg-muted/10 border-y border-border/50">
-          <div className="container px-4 md:px-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[
-                { title: "Machines", icon: Bike, desc: "MX, Enduro, Sleds, ATVs", color: "from-blue-500/20" },
-                { title: "Parts", icon: Zap, desc: "OEM, Aftermarket, Mods", color: "from-purple-500/20" },
-                { title: "Gear", icon: ArrowRight, desc: "Helmets, Boots, Kits", color: "from-pink-500/20" },
-                { title: "Roostorage", icon: ShieldCheck, desc: "Secure Space for your Toys", color: "from-amber-500/20" },
-              ].map((cat, i) => (
-                <Link 
-                  key={i} 
-                  href={`/marketplace?type=${cat.title.toLowerCase() === 'machines' ? 'machine' : cat.title.toLowerCase() === 'roostorage' ? 'storage' : cat.title.toLowerCase().replace(/s$/, '')}`}
-                  className="group relative overflow-hidden rounded-3xl border border-border bg-card p-8 hover:border-primary/50 transition-all hover:-translate-y-1 hover:shadow-xl"
-                >
-                  <div className={cn("absolute inset-0 bg-gradient-to-br to-transparent opacity-0 group-hover:opacity-100 transition-opacity", cat.color)} />
-                  <div className="relative z-10">
-                    <div className="flex items-center justify-between mb-6">
-                        <div className="p-3 rounded-2xl bg-muted group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                            <cat.icon className="h-8 w-8" />
-                        </div>
-                        <ArrowRight className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0" />
+                        {/* Categories Grid */}
+
+                        <section className="py-24 bg-muted/10 border-y border-border/50">
+
+                          <div className="container px-4 md:px-6">
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                              {[
+
+                                { title: "Machines", icon: Bike, desc: "MX, Enduro, Sleds, ATVs", color: "from-blue-500/20" },
+
+                                { title: "Parts", icon: Zap, desc: "OEM, Aftermarket, Mods", color: "from-purple-500/20" },
+
+                                { title: "Gear", icon: ArrowRight, desc: "Helmets, Boots, Kits", color: "from-pink-500/20" },
+
+                                { title: "Roostorage", icon: ShieldCheck, desc: "Secure Space for your Toys", color: "from-amber-500/20" },
+
+                              ].map((cat, i) => (
+
+                                <Link 
+
+                                  key={i} 
+
+                                  href={`/marketplace?type=${cat.title.toLowerCase() === 'machines' ? 'machine' : cat.title.toLowerCase() === 'roostorage' ? 'storage' : cat.title.toLowerCase().replace(/s$/, '')}`}
+
+                                  className="group relative overflow-hidden rounded-3xl border border-border bg-card p-8 hover:border-primary/50 transition-all hover:-translate-y-1 hover:shadow-xl"
+
+                                >
+
+                                  <div className={cn("absolute inset-0 bg-gradient-to-br to-transparent opacity-0 group-hover:opacity-100 transition-opacity", cat.color)} />
+
+                                  <div className="relative z-10">
+
+                                    <div className="flex items-center justify-between mb-6">
+
+                                        <div className="p-3 rounded-2xl bg-muted group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+
+                                            <cat.icon className="h-8 w-8" />
+
+                                        </div>
+
+                                        <ArrowRight className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0" />
+
+                                    </div>
+
+                                    <h3 className="font-space-grotesk font-black text-3xl uppercase italic mb-2 tracking-tight">{cat.title}</h3>
+
+                                    <p className="text-muted-foreground font-medium">{cat.desc}</p>
+
+                                  </div>
+
+                                </Link>
+
+                              ))}
+
+                            </div>
+
+                          </div>
+
+                        </section>
+
+                
+
+                      </main>
+
                     </div>
-                    <h3 className="font-space-grotesk font-black text-3xl uppercase italic mb-2 tracking-tight">{cat.title}</h3>
-                    <p className="text-muted-foreground font-medium">{cat.desc}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
 
-      </main>
+                  );
 
-      <Footer />
-    </div>
-  );
-}
+                }
+
+                
+
+        

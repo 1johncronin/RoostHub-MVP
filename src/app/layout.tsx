@@ -6,6 +6,8 @@ import { createClient } from "@/lib/supabase/server";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { Navbar } from "@/components/layout/Navbar";
 
+import { Footer } from "@/components/layout/Footer";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -76,6 +78,7 @@ export default async function RootLayout({
             <main className="flex-1 pb-20 md:pb-0">
                 {children}
             </main>
+            <Footer />
             <MobileNav />
           </div>
         </ThemeProvider>
