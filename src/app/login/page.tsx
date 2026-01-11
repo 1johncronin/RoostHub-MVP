@@ -12,15 +12,24 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
 
   async function handleSubmit(formData: FormData) {
-    setLoading(true)
-    setError(null)
+    setLoading(true);
+    setError(null);
     
-    const action = isLogin ? login : signup
-    const result = await action(formData)
-    
-    if (result?.error) {
-      setError(result.error)
-      setLoading(false)
+    try {
+      const action = isLogin ? login : signup;
+      const result = await action(formData);
+      
+      if (result?.error) {
+        setError(result.error);
+        setLoading(false);
+      }
+    } catch (err: any) {
+      // If it's a redirect error, Next.js handles it. 
+      // We only catch real errors.
+      if (err.message !== 'NEXT_REDIRECT') {
+        setError("An unexpected error occurred. Please try again.");
+        setLoading(false);
+      }
     }
   }
 
