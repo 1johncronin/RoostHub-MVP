@@ -56,30 +56,37 @@
 body[data-brand="ktm"], [data-brand="ktm"] body {
   --primary: 23 100% 50% !important; 
   --ring: 23 100% 50% !important;
+  --primary-foreground: 0 0% 0% !important; /* Black text on Orange */
 }
 body[data-brand="yamaha"], [data-brand="yamaha"] body {
   --primary: 217 100% 50% !important;
   --ring: 217 100% 50% !important;
+  --primary-foreground: 0 0% 100% !important;
 }
 body[data-brand="honda"], [data-brand="honda"] body {
   --primary: 0 100% 50% !important;
   --ring: 0 100% 50% !important;
+  --primary-foreground: 0 0% 100% !important;
 }
 body[data-brand="kawasaki"], [data-brand="kawasaki"] body {
   --primary: 85 100% 50% !important;
   --ring: 85 100% 50% !important;
+  --primary-foreground: 0 0% 0% !important; /* Black text on Lime */
 }
 body[data-brand="suzuki"], [data-brand="suzuki"] body {
   --primary: 50 100% 50% !important;
   --ring: 50 100% 50% !important;
+  --primary-foreground: 0 0% 0% !important; /* Black text on Yellow */
 }
 body[data-brand="husqvarna"], [data-brand="husqvarna"] body {
   --primary: 200 100% 30% !important;
   --ring: 200 100% 30% !important;
+  --primary-foreground: 0 0% 100% !important;
 }
 body[data-brand="gasgas"], [data-brand="gasgas"] body {
   --primary: 0 100% 40% !important;
   --ring: 0 100% 40% !important;
+  --primary-foreground: 0 0% 100% !important;
 }
 
 @theme inline {

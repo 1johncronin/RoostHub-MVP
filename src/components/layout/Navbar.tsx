@@ -27,7 +27,7 @@ export async function Navbar() {
           <div className="hidden md:flex items-center gap-6 ml-6 text-sm font-medium text-muted-foreground">
             <Link href="/marketplace" className="hover:text-primary transition-colors uppercase italic font-black tracking-widest">Marketplace</Link>
             <Link href="/garage" className="hover:text-primary transition-colors uppercase italic font-black tracking-widest">Garage</Link>
-            <Link href="/sell" className="px-4 py-1.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all uppercase italic font-black tracking-widest shadow-lg shadow-primary/20 scale-95 hover:scale-100">
+            <Link href="/sell" className="px-4 py-1.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all uppercase italic font-black tracking-widest shadow-lg shadow-primary/20 scale-95 hover:scale-100">
                 Sell
             </Link>
             <Link href="/dj-booth" className="hover:text-primary transition-colors flex items-center gap-1 uppercase italic font-black tracking-widest">
