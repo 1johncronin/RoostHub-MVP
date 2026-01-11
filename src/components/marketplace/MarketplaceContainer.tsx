@@ -5,6 +5,7 @@ import { ListingCard } from './ListingCard';
 import { FilterBar } from './FilterBar';
 import dynamic from 'next/dynamic';
 import { cn } from '@/lib/utils';
+import { Search } from 'lucide-react';
 
 const MarketplaceMap = dynamic(() => import('@/components/map/MarketplaceMap'), {
   ssr: false,
@@ -48,26 +49,34 @@ export function MarketplaceContainer({
 
         <FilterBar currentType={params.type} />
 
-        {view === 'map' ? (
-            <MarketplaceMap listings={listings} />
+        {listings.length > 0 ? (
+            view === 'map' ? (
+                <MarketplaceMap listings={listings} />
+            ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {listings.map((listing: any) => (
+                        <ListingCard
+                            key={listing.id}
+                            id={listing.id}
+                            title={listing.title}
+                            price={listing.price}
+                            currency={listing.currency}
+                            location={listing.location_name}
+                            imageUrl={listing.listing_media?.[0]?.url}
+                            type={listing.type}
+                            make={listing.machines?.make}
+                            model={listing.machines?.model}
+                            year={listing.machines?.year}
+                            isFeatured={listing.is_featured}
+                        />
+                    ))}
+                </div>
+            )
         ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {listings.map((listing: any) => (
-                    <ListingCard
-                        key={listing.id}
-                        id={listing.id}
-                        title={listing.title}
-                        price={listing.price}
-                        currency={listing.currency}
-                        location={listing.location_name}
-                        imageUrl={listing.listing_media?.[0]?.url}
-                        type={listing.type}
-                        make={listing.machines?.make}
-                        model={listing.machines?.model}
-                        year={listing.machines?.year}
-                        isFeatured={listing.is_featured}
-                    />
-                ))}
+            <div className="py-20 flex flex-col items-center justify-center text-center border-2 border-dashed border-border rounded-3xl bg-muted/10">
+                <Search className="h-12 w-12 text-muted-foreground mb-4 opacity-20" />
+                <h3 className="font-bold text-xl uppercase italic">No Matches Found</h3>
+                <p className="text-muted-foreground max-w-xs mt-1">Try adjusting your filters or search query to find what you're looking for.</p>
             </div>
         )}
     </div>

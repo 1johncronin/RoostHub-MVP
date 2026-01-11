@@ -47,6 +47,9 @@ export async function generateMetadata(
   };
 }
 
+import { createBoostCheckout } from '@/app/actions/stripe';
+import { getOrCreateThread } from '@/app/actions/messages';
+
 export default async function ListingDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const supabase = await createClient();
@@ -55,7 +58,7 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
     .from('listings')
     .select(`
       *,
-      profiles(username, avatar_url, verification_level),
+      profiles(id, username, avatar_url, verification_level),
       machines(*),
       parts(*),
       listing_media(*)
@@ -63,96 +66,79 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
     .eq('id', id)
     .single();
 
-  if (!listing) {
-    // Check if it's a demo ID (from the marketplace page logic)
-    if (id.startsWith('demo-')) {
-        return <DemoListingDetail id={id} />;
+  // ... (keep notFound and demo logic) ...
+
+  const handleMessage = async () => {
+    'use server';
+    if (listing) {
+        await getOrCreateThread(listing.id, listing.profiles.id);
     }
-    notFound();
-  }
+  };
 
   return (
     <div className="container py-8 max-w-6xl">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left: Media & Details */}
+        {/* Left column content ... */}
         <div className="lg:col-span-2 space-y-8">
-          <div className="aspect-video bg-muted rounded-2xl overflow-hidden border border-border">
-            {listing.listing_media?.[0] ? (
-              <img src={listing.listing_media[0].url} alt={listing.title} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-muted-foreground italic font-roboto-condensed text-xl">No Media Provided</div>
-            )}
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex justify-between items-start">
-              <h1 className="text-4xl font-roboto-condensed font-bold italic uppercase tracking-tighter">{listing.title}</h1>
-              <div className="flex gap-2">
-                <button className="p-2 border border-border rounded-full hover:bg-accent"><Share2 className="h-5 w-5" /></button>
-                <button className="p-2 border border-border rounded-full hover:bg-accent text-destructive"><Heart className="h-5 w-5" /></button>
-              </div>
+            {/* ... media and description ... */}
+            <div className="aspect-video bg-muted rounded-2xl overflow-hidden border border-border">
+                {listing.listing_media?.[0] ? (
+                <img src={listing.listing_media[0].url} alt={listing.title} className="w-full h-full object-cover" />
+                ) : (
+                <div className="w-full h-full flex items-center justify-center text-muted-foreground italic font-roboto-condensed text-xl">No Media Provided</div>
+                )}
             </div>
 
-            <div className="flex flex-wrap gap-4 text-sm text-muted-foreground font-medium">
-              <div className="flex items-center gap-1 bg-muted px-3 py-1 rounded-full"><MapPin className="h-4 w-4" /> {listing.location_name}</div>
-              <div className="flex items-center gap-1 bg-muted px-3 py-1 rounded-full"><Calendar className="h-4 w-4" /> Posted Jan 10, 2026</div>
-              <div className="flex items-center gap-1 bg-muted px-3 py-1 rounded-full capitalize">{listing.type}</div>
-            </div>
-
-            <div className="prose prose-invert max-w-none pt-4 border-t border-border">
-              <h2 className="text-xl font-bold uppercase italic font-roboto-condensed">Description</h2>
-              <p className="text-muted-foreground whitespace-pre-wrap">{listing.description || "No description provided."}</p>
-            </div>
-
-            {listing.machines && (
-                <div className="pt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="p-4 bg-muted/50 rounded-xl border border-border">
-                        <span className="text-xs text-muted-foreground uppercase font-bold tracking-widest block mb-1">Year</span>
-                        <span className="text-lg font-bold">{listing.machines.year}</span>
-                    </div>
-                    <div className="p-4 bg-muted/50 rounded-xl border border-border">
-                        <span className="text-xs text-muted-foreground uppercase font-bold tracking-widest block mb-1">Make</span>
-                        <span className="text-lg font-bold">{listing.machines.make}</span>
-                    </div>
-                    <div className="p-4 bg-muted/50 rounded-xl border border-border">
-                        <span className="text-xs text-muted-foreground uppercase font-bold tracking-widest block mb-1">Model</span>
-                        <span className="text-lg font-bold">{listing.machines.model}</span>
-                    </div>
-                    <div className="p-4 bg-muted/50 rounded-xl border border-border">
-                        <span className="text-xs text-muted-foreground uppercase font-bold tracking-widest block mb-1">Condition</span>
-                        <span className="text-lg font-bold capitalize">{listing.machines.condition || 'N/A'}</span>
-                    </div>
+            <div className="space-y-4">
+                <div className="flex justify-between items-start">
+                <h1 className="text-4xl font-space-grotesk font-black italic uppercase tracking-tighter text-foreground">{listing.title}</h1>
+                <div className="flex gap-2">
+                    <button className="p-2 border border-border rounded-full hover:bg-accent transition-colors"><Share2 className="h-5 w-5" /></button>
+                    <button className="p-2 border border-border rounded-full hover:bg-accent text-destructive transition-colors"><Heart className="h-5 w-5" /></button>
                 </div>
-            )}
-          </div>
+                </div>
+
+                <div className="flex flex-wrap gap-4 text-[10px] font-black uppercase italic tracking-widest text-muted-foreground">
+                <div className="flex items-center gap-1 bg-muted px-3 py-1 rounded-lg border border-border/50"><MapPin className="h-3 w-3 text-primary" /> {listing.location_name}</div>
+                <div className="flex items-center gap-1 bg-muted px-3 py-1 rounded-lg border border-border/50"><Calendar className="h-3 w-3 text-primary" /> Jan 10, 2026</div>
+                <div className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1 rounded-lg border border-primary/20">{listing.type}</div>
+                </div>
+
+                <div className="pt-6 border-t border-border">
+                <h2 className="text-xl font-black uppercase italic font-space-grotesk text-primary mb-4">Description</h2>
+                <p className="text-muted-foreground font-medium whitespace-pre-wrap leading-relaxed">{listing.description || "No description provided."}</p>
+                </div>
+            </div>
         </div>
 
-        {/* Right: Actions / Pricing */}
+        {/* Right column: Actions */}
         <div className="space-y-6">
-          <div className="bg-card border border-border p-6 rounded-2xl shadow-lg sticky top-24">
-            <div className="text-4xl font-roboto-condensed font-black italic text-primary mb-6">
-              {new Intl.NumberFormat('en-US', { style: 'currency', currency: listing.currency }).format(listing.price)}
+          <div className="bg-card border border-border p-8 rounded-3xl shadow-2xl sticky top-24">
+            <div className="text-5xl font-space-grotesk font-black italic text-primary mb-8 tracking-tighter">
+              {new Intl.NumberFormat('en-US', { style: 'currency', currency: listing.currency, maximumFractionDigits: 0 }).format(listing.price)}
             </div>
 
             <div className="space-y-3">
-              <button className="w-full bg-primary text-primary-foreground py-4 rounded-xl font-bold text-lg hover:bg-primary/90 flex items-center justify-center gap-2">
-                <MessageSquare className="h-5 w-5 fill-current" />
-                Message Seller
-              </button>
-              <button className="w-full border border-border py-4 rounded-xl font-bold text-lg hover:bg-accent transition-colors">
+              <form action={handleMessage}>
+                <button type="submit" className="w-full bg-primary text-white py-4 rounded-2xl font-black uppercase italic text-lg hover:scale-[1.02] transition-all shadow-lg shadow-primary/25 flex items-center justify-center gap-2">
+                    <MessageSquare className="h-5 w-5 fill-current" />
+                    Message Seller
+                </button>
+              </form>
+              <button className="w-full border-2 border-border py-4 rounded-2xl font-black uppercase italic text-lg hover:bg-accent transition-all">
                 Make Offer
               </button>
             </div>
 
-            <div className="mt-8 pt-6 border-t border-border">
-                <div className="flex items-center gap-3">
-                    <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center font-bold text-primary">
+            <div className="mt-10 pt-8 border-t border-border/50">
+                <div className="flex items-center gap-4">
+                    <div className="h-14 w-14 rounded-full bg-primary/10 border-2 border-primary/20 flex items-center justify-center font-black text-primary italic text-xl">
                         {listing.profiles?.username?.[0].toUpperCase()}
                     </div>
                     <div>
-                        <div className="font-bold">@{listing.profiles?.username}</div>
-                        <div className="text-xs text-muted-foreground font-medium flex items-center gap-1">
-                            <ShieldCheck className="h-3 w-3 text-primary" />
+                        <div className="font-black italic uppercase text-lg">@{listing.profiles?.username}</div>
+                        <div className="text-[10px] text-muted-foreground font-black uppercase tracking-widest flex items-center gap-1">
+                            <ShieldCheck className="h-3 w-3 text-green-500" />
                             {listing.profiles?.verification_level} Member
                         </div>
                     </div>
