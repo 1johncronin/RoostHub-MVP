@@ -12,14 +12,26 @@ export async function sendInvite(recipientEmail: string) {
 
   if (!user) return { error: 'Unauthorized' };
 
+  // 1. Check Daily Limit
+  const { data: profile } = await supabase.from('profiles').select('daily_invites_sent, last_invite_sent_at').eq('id', user.id).single();
+  
+  const dailyLimit = 5;
+  const lastSent = profile?.last_invite_sent_at ? new Date(profile.last_invite_sent_at) : new Date(0);
+  const isNewDay = lastSent.toDateString() !== new Date().toDateString();
+  const sentToday = isNewDay ? 0 : (profile?.daily_invites_sent || 0);
+
+  if (sentToday >= dailyLimit) {
+    return { error: { message: `Daily limit reached! Your 5 invites will refill tomorrow.` } };
+  }
+
   const host = (await headers()).get('host');
   const protocol = host?.includes('localhost') ? 'http' : 'https';
   const origin = `${protocol}://${host}`;
 
-  // ... (keep invite code logic) ...
+  // 2. Get or create invite code for user
   let { data: inviteCode } = await supabase
     .from('invite_codes')
-    .select('code')
+    .select('id, code')
     .eq('owner_id', user.id)
     .single();
 
@@ -33,14 +45,20 @@ export async function sendInvite(recipientEmail: string) {
     inviteCode = created;
   }
 
-  // 2. Log the invite
+  // 3. Log the invite
   await supabase.from('viral_invites').insert({
     invite_code_id: (inviteCode as any).id,
     inviter_id: user.id,
     invitee_email: recipientEmail
   });
 
-  // 3. Send Email via Resend
+  // 4. Update Daily Count
+  await supabase.from('profiles').update({
+    daily_invites_sent: sentToday + 1,
+    last_invite_sent_at: new Date().toISOString()
+  }).eq('id', user.id);
+
+  // 5. Send Email via Resend
   const inviteLink = `${origin}/login?invite=${inviteCode?.code || ''}`;
   const result = await sendEmail({
     to: recipientEmail,

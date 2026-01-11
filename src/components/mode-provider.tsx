@@ -26,7 +26,11 @@ export function ModeProvider({ children, initialBrand = 'roosthub' }: { children
 
   return (
     <ModeContext.Provider value={{ mode, setMode, brand, setBrand }}>
-      <div className="relative min-h-screen font-sans overflow-x-hidden">
+      <div 
+        key={brand}
+        data-brand={brand} 
+        className="relative min-h-screen font-sans overflow-x-hidden"
+      >
         {children}
         
         {/* Winter Mode: High-Fidelity Ground Snow Effect */}

@@ -52,7 +52,11 @@
   --ring: 263 90% 50%;
 }
 
-/* Brand Theme Overrides (Universal Application) */
+/* Ultra-Aggressive Brand Theme Overrides */
+:root, [data-brand] {
+  transition: --primary 0.3s ease;
+}
+
 [data-brand="ktm"] {
   --primary: 23 100% 50% !important; 
   --ring: 23 100% 50% !important;
@@ -88,6 +92,12 @@
   --ring: 0 100% 40% !important;
   --primary-foreground: 0 0% 100% !important;
 }
+
+/* Force elements to inherit the brand color from the nearest [data-brand] parent */
+[data-brand] .text-primary { color: hsl(var(--primary)) !important; }
+[data-brand] .bg-primary { background-color: hsl(var(--primary)) !important; color: hsl(var(--primary-foreground)) !important; }
+[data-brand] .border-primary { border-color: hsl(var(--primary)) !important; }
+[data-brand] .ring-primary { --tw-ring-color: hsl(var(--primary)) !important; }
 
 @theme inline {
   --color-background: hsl(var(--background));
