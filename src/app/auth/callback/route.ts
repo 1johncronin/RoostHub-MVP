@@ -2,17 +2,18 @@ import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
-  // The `/auth/callback` route is required for the server-side auth flow to work properly.
-  // The Auth helpers package exchanges an auth code for the user's session.
-  // https://supabase.com/docs/guides/auth/auth-helpers/nextjs#managing-sign-in-with-code-exchange
-  const requestUrl = new URL(request.url)
-  const code = requestUrl.searchParams.get('code')
-  
+  const { searchParams, origin } = new URL(request.url)
+  const code = searchParams.get('code')
+  const next = searchParams.get('next') ?? '/garage'
+
   if (code) {
     const supabase = await createClient()
-    await supabase.auth.exchangeCodeForSession(code)
+    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    if (!error) {
+      return NextResponse.redirect(`${origin}${next}`)
+    }
   }
 
-  // URL to redirect to after sign in process completes
-  return NextResponse.redirect(requestUrl.origin)
+  // return the user to an error page with instructions
+  return NextResponse.redirect(`${origin}/login?error=Could not authenticate user`)
 }

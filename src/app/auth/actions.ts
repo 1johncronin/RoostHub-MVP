@@ -30,32 +30,20 @@ export async function signup(formData: FormData) {
   const password = formData.get('password') as string
   const username = formData.get('username') as string
 
-  // 1. Sign up auth user
+  // Sign up auth user. 
+  // The database trigger 'on_auth_user_created' will handle profile creation.
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
+    options: {
+      data: {
+        username: username,
+      }
+    }
   })
 
   if (error) {
     return { error: error.message }
-  }
-
-  // 2. Create profile (Trigger handled by DB usually, but for MVP we can manual insert if trigger not set)
-  // We'll rely on the user to confirm email first usually, but let's see.
-  // Ideally, we have a DB Trigger. If not, we insert into profiles here.
-  // For safety, let's try to insert into profiles if user exists.
-  
-  if (data.user) {
-     const { error: profileError } = await supabase.from('profiles').insert({
-        id: data.user.id,
-        username: username,
-        role: 'user'
-     })
-     
-     if (profileError) {
-        console.error('Profile creation failed:', profileError)
-        // Note: Auth user is created, but profile failed. 
-     }
   }
 
   revalidatePath('/', 'layout')

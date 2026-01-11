@@ -39,7 +39,12 @@ export async function updateSession(request: NextRequest) {
 
   const path = request.nextUrl.pathname
 
-  // Public routes that don't require auth
+  // 1. If user is logged in and tries to access login/auth, redirect to garage
+  if (user && (path.startsWith('/login') || path.startsWith('/auth'))) {
+    return NextResponse.redirect(new URL('/garage', request.url))
+  }
+
+  // 2. Public routes that don't require auth
   const isPublicRoute = 
     path === '/' ||
     path.startsWith('/marketplace') ||
@@ -47,8 +52,9 @@ export async function updateSession(request: NextRequest) {
     path.startsWith('/login') ||
     path.startsWith('/auth') ||
     path.startsWith('/api') ||
-    path.includes('.') // Allow all files with extensions (images, manifest, etc)
+    path.includes('.')
 
+  // 3. Protected routes logic
   if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'

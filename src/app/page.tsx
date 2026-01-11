@@ -54,7 +54,7 @@ export default function Home() {
               ].map((cat, i) => (
                 <Link 
                   key={i} 
-                  href={`/search?type=${cat.title.toLowerCase()}`}
+                  href={`/marketplace?type=${cat.title.toLowerCase() === 'machines' ? 'machine' : cat.title.toLowerCase().replace(/s$/, '')}`}
                   className="group relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-primary/50 transition-colors"
                 >
                   <div className="flex items-center justify-between mb-4">

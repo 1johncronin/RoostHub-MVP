@@ -16,9 +16,9 @@ export function Footer() {
           </div>
           <div className="flex flex-col gap-2 text-sm text-muted-foreground">
             <h3 className="font-semibold text-foreground">Marketplace</h3>
-            <Link href="/search?type=machine" className="hover:underline">Machines</Link>
-            <Link href="/search?type=part" className="hover:underline">Parts</Link>
-            <Link href="/search?type=gear" className="hover:underline">Gear</Link>
+            <Link href="/marketplace?type=machine" className="hover:underline">Machines</Link>
+            <Link href="/marketplace?type=part" className="hover:underline">Parts</Link>
+            <Link href="/marketplace?type=gear" className="hover:underline">Gear</Link>
           </div>
           <div className="flex flex-col gap-2 text-sm text-muted-foreground">
             <h3 className="font-semibold text-foreground">Community</h3>
