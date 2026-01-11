@@ -4,13 +4,19 @@ import { createClient } from '@/lib/supabase/server';
 import { sendEmail } from '@/lib/email';
 import { nanoid } from 'nanoid';
 
+import { headers } from 'next/headers';
+
 export async function sendInvite(recipientEmail: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) return { error: 'Unauthorized' };
 
-  // 1. Get or create invite code for user
+  const host = (await headers()).get('host');
+  const protocol = host?.includes('localhost') ? 'http' : 'https';
+  const origin = `${protocol}://${host}`;
+
+  // ... (keep invite code logic) ...
   let { data: inviteCode } = await supabase
     .from('invite_codes')
     .select('code')
@@ -34,9 +40,8 @@ export async function sendInvite(recipientEmail: string) {
     invitee_email: recipientEmail
   });
 
-    // 3. Send Email via Resend
-  const inviteLink = `https://roosthub.vercel.app/login?invite=${inviteCode?.code || ''}`;
-  
+  // 3. Send Email via Resend
+  const inviteLink = `${origin}/login?invite=${inviteCode?.code || ''}`;
   const result = await sendEmail({
     to: recipientEmail,
     subject: `You've been invited to RoostHub! 🏁`,
