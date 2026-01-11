@@ -10,7 +10,9 @@ export default function SettingsPage() {
   const supabase = createClient();
   const { mode, setMode, brand, setBrand } = useVisualMode();
   const [profile, setProfile] = useState<any>(null);
+  const [saveStatus, setSaveStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [verifyingPhone, setVerifyingPhone] = useState(false);
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
@@ -31,6 +33,41 @@ export default function SettingsPage() {
     }
     loadProfile();
   }, []);
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !profile) return;
+
+    setUploadingAvatar(true);
+    try {
+        const fileExt = file.name.split('.').pop();
+        const filePath = `${profile.id}/avatar-${Math.random()}.${fileExt}`;
+
+        const { error: uploadError } = await supabase.storage
+            .from('avatars')
+            .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+            .from('avatars')
+            .getPublicUrl(filePath);
+
+        const { error: updateError } = await supabase
+            .from('profiles')
+            .update({ avatar_url: publicUrl })
+            .eq('id', profile.id);
+
+        if (updateError) throw updateError;
+
+        setProfile((prev: any) => ({ ...prev, avatar_url: publicUrl }));
+        alert("Avatar updated!");
+    } catch (error: any) {
+        alert(error.message);
+    } finally {
+        setUploadingAvatar(false);
+    }
+  };
 
   const BRANDS = [
     { id: 'roosthub', name: 'RoostHub (Purple)', color: 'bg-[#7C3AED]' },
@@ -84,6 +121,45 @@ export default function SettingsPage() {
       <h1 className="text-3xl font-black italic uppercase font-space-grotesk mb-8 text-primary tracking-tight">Customization</h1>
       
       <div className="space-y-8">
+        {/* Profile Picture Card */}
+        <div className="bg-card border border-border p-8 rounded-3xl space-y-6 shadow-xl relative z-20">
+            <div className="flex items-center gap-6">
+                <div className="relative group">
+                    <div className="h-24 w-24 rounded-full bg-primary/10 border-4 border-background flex items-center justify-center overflow-hidden font-black text-4xl text-primary italic font-roboto-condensed">
+                        {profile?.avatar_url ? (
+                            <img src={profile.avatar_url} alt={profile.username} className="w-full h-full object-cover" />
+                        ) : (
+                            profile?.username?.[0].toUpperCase()
+                        )}
+                    </div>
+                    {uploadingAvatar && (
+                        <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center">
+                            <Loader2 className="h-6 w-6 text-white animate-spin" />
+                        </div>
+                    )}
+                </div>
+                <div className="space-y-2">
+                    <h3 className="font-black text-xl italic uppercase font-space-grotesk text-foreground">Profile Image</h3>
+                    <div className="flex gap-2">
+                        <button 
+                            onClick={() => document.getElementById('avatar-input')?.click()}
+                            disabled={uploadingAvatar}
+                            className="bg-primary text-primary-foreground px-4 py-2 rounded-xl font-black uppercase italic text-xs hover:scale-105 transition-all shadow-lg shadow-primary/20 disabled:opacity-50"
+                        >
+                            Change Photo
+                        </button>
+                        <input 
+                            id="avatar-input"
+                            type="file" 
+                            accept="image/*" 
+                            onChange={handleAvatarUpload}
+                            className="hidden" 
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {/* Brand Theme Card */}
         <div className="bg-card border border-border p-8 rounded-3xl space-y-6 shadow-xl relative z-20">
             <div className="flex items-center gap-4">

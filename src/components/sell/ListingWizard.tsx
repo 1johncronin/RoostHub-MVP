@@ -254,119 +254,142 @@ export function ListingWizard({ userId, initialData }: WizardProps) {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {formData.type === 'storage' ? (
-                    <div className="space-y-4">
-                        <div>
-                            <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Space Type</label>
-                            <select name="space_type" value={formData.space_type} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold">
-                                <option>Garage</option>
-                                <option>Shop</option>
-                                <option>Trailer Spot</option>
-                                <option>Covered Parking</option>
-                            </select>
+                    <div className="space-y-4 md:col-span-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Space Type</label>
+                                <select name="space_type" value={formData.space_type} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold">
+                                    <option>Garage</option>
+                                    <option>Shop</option>
+                                    <option>Warehouse</option>
+                                    <option>Driveway / Parking</option>
+                                    <option>Trailer / Container</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Access Type</label>
+                                <select name="access_type" value={formData.access_type} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold">
+                                    <option>24/7 Access</option>
+                                    <option>Appointment Only</option>
+                                    <option>Daylight Hours</option>
+                                    <option>Key Provided</option>
+                                </select>
+                            </div>
                         </div>
-                        <div>
-                            <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Access</label>
-                            <select name="access_type" value={formData.access_type} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold">
-                                <option>24/7</option>
-                                <option>Appointment Only</option>
-                                <option>Daylight Hours</option>
-                            </select>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Price Per Month ($)</label>
+                                <div className="relative">
+                                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
+                                    <input name="price" type="number" value={formData.price} onChange={handleChange} className="w-full pl-10 pr-4 py-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-black text-xl text-primary" placeholder="0.00" />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Location</label>
+                                <input name="location" value={formData.location} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="City, State" />
+                            </div>
+                        </div>
+
+                        <div className="p-6 bg-primary/5 border border-primary/10 rounded-2xl">
+                            <h4 className="text-xs font-black uppercase italic text-primary mb-4">Roostorage Features</h4>
+                            <div className="grid grid-cols-2 gap-4">
+                                <label className="flex items-center gap-2 cursor-pointer group">
+                                    <input type="checkbox" className="h-4 w-4 rounded border-border text-primary focus:ring-primary" />
+                                    <span className="text-xs font-bold uppercase group-hover:text-primary transition-colors">Heated / Climate Controlled</span>
+                                </label>
+                                <label className="flex items-center gap-2 cursor-pointer group">
+                                    <input type="checkbox" className="h-4 w-4 rounded border-border text-primary focus:ring-primary" />
+                                    <span className="text-xs font-bold uppercase group-hover:text-primary transition-colors">Security Cameras</span>
+                                </label>
+                                <label className="flex items-center gap-2 cursor-pointer group">
+                                    <input type="checkbox" className="h-4 w-4 rounded border-border text-primary focus:ring-primary" />
+                                    <span className="text-xs font-bold uppercase group-hover:text-primary transition-colors">Tools Available</span>
+                                </label>
+                                <label className="flex items-center gap-2 cursor-pointer group">
+                                    <input type="checkbox" className="h-4 w-4 rounded border-border text-primary focus:ring-primary" />
+                                    <span className="text-xs font-bold uppercase group-hover:text-primary transition-colors">Gated / Fenced</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 ) : (
-                    <div className="space-y-4">
-                        <div>
-                            <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Year</label>
-                            <select name="year" value={formData.year} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold">
-                                {Array.from({length: 26}, (_, i) => 2026 - i).map(y => (
-                                    <option key={y} value={y}>{y}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Make</label>
-                            <select name="make" value={formData.make} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold">
-                                <option value="">Select Brand</option>
-                                {MOTORSPORT_MAKES.map(m => (
-                                    <option key={m.name} value={m.name}>{m.name}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                                            <div className="relative">
-
-                                                <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Model</label>
-
-                                                <input name="model" value={formData.model} onChange={handleChange} autoComplete="off" className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="e.g. 300 XC-W" />
-
-                                                
-
-                                                {suggestedModels.length > 0 && !formData.model.includes(suggestedModels[0]) && (
-
-                                                    <div className="absolute z-50 top-full left-0 w-full mt-2 bg-popover border border-border rounded-xl shadow-2xl p-2 max-h-48 overflow-y-auto overflow-x-hidden backdrop-blur-md">
-
-                                                        {suggestedModels.filter(m => m.toLowerCase().includes(formData.model.toLowerCase())).map(m => (
-
-                                                            <button key={m} onClick={() => selectSuggestion(m)} className="w-full text-left px-4 py-2 hover:bg-primary hover:text-primary-foreground rounded-lg text-sm font-bold transition-colors truncate">
-
-                                                                {m}
-
-                                                            </button>
-
-                                                        ))}
-
-                                                    </div>
-
-                                                )}
-
-                                            </div>
-
-                        
-
-                                            <div>
-
-                                                <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">VIN / Serial</label>
-
-                                                <input name="vin" value={formData.vin} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-mono uppercase font-bold" placeholder="17-DIGIT VIN" maxLength={17} />
-
-                                                <p className="text-[9px] text-muted-foreground mt-1 font-bold uppercase tracking-tighter italic">Required for secure verification and history.</p>
-
-                                            </div>
-
-                                        </div>
-
-                        
-                )}
-
-                <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Hours</label>
-                            <input name="hours" type="number" value={formData.hours} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="0.0" />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Miles</label>
-                            <input name="miles" type="number" value={formData.miles} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="0" />
-                        </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Price ($)</label>
-                        <div className="relative">
-                            <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
-                            <input name="price" type="number" value={formData.price} onChange={handleChange} className="w-full pl-10 pr-4 py-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-black text-xl text-primary" placeholder="0.00" />
-                        </div>
-                        {estimatedValue && (
-                            <div className="mt-2 p-3 bg-primary/5 border border-primary/10 rounded-lg flex items-start gap-2">
-                                <Info className="h-4 w-4 text-primary mt-0.5" />
-                                <p className="text-[10px] font-bold text-primary uppercase tracking-tight">
-                                    Roost Intelligence: Average market value for this {formData.make} is approx. ${estimatedValue.toLocaleString()}.
-                                </p>
+                    <>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Year</label>
+                                <select name="year" value={formData.year} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold">
+                                    {Array.from({length: 26}, (_, i) => 2026 - i).map(y => (
+                                        <option key={y} value={y}>{y}</option>
+                                    ))}
+                                </select>
                             </div>
-                        )}
-                    </div>
-                </div>
+
+                            <div>
+                                <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Make</label>
+                                <select name="make" value={formData.make} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold">
+                                    <option value="">Select Brand</option>
+                                    {MOTORSPORT_MAKES.map(m => (
+                                        <option key={m.name} value={m.name}>{m.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="relative">
+                                <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Model</label>
+                                <input name="model" value={formData.model} onChange={handleChange} autoComplete="off" className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="e.g. 300 XC-W" />
+                                {suggestedModels.length > 0 && !formData.model.includes(suggestedModels[0]) && (
+                                    <div className="absolute z-50 top-full left-0 w-full mt-2 bg-popover border border-border rounded-xl shadow-2xl p-2 max-h-48 overflow-y-auto overflow-x-hidden backdrop-blur-md">
+                                        {suggestedModels.filter(m => m.toLowerCase().includes(formData.model.toLowerCase())).map(m => (
+                                            <button key={m} onClick={() => selectSuggestion(m)} className="w-full text-left px-4 py-2 hover:bg-primary hover:text-primary-foreground rounded-lg text-sm font-bold transition-colors truncate">
+                                                {m}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">VIN / Serial</label>
+                                <input name="vin" value={formData.vin} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-mono uppercase font-bold" placeholder="17-DIGIT VIN" maxLength={17} />
+                                <p className="text-[9px] text-muted-foreground mt-1 font-bold uppercase tracking-tighter italic">Required for secure verification and history.</p>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Hours</label>
+                                    <input name="hours" type="number" value={formData.hours} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="0.0" />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Miles</label>
+                                    <input name="miles" type="number" value={formData.miles} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="0" />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Price ($)</label>
+                                <div className="relative">
+                                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
+                                    <input name="price" type="number" value={formData.price} onChange={handleChange} className="w-full pl-10 pr-4 py-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-black text-xl text-primary" placeholder="0.00" />
+                                </div>
+                                {estimatedValue && (
+                                    <div className="mt-2 p-3 bg-primary/5 border border-primary/10 rounded-lg flex items-start gap-2">
+                                        <Info className="h-4 w-4 text-primary mt-0.5" />
+                                        <p className="text-[10px] font-bold text-primary uppercase tracking-tight">
+                                            Roost Intelligence: Average market value for this {formData.make} is approx. ${estimatedValue.toLocaleString()}.
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                            <div>
+                                <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Location</label>
+                                <input name="location" value={formData.location} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="City, State" />
+                            </div>
+                        </div>
+                    </>
+                )}
             </div>
           </div>
         )}

@@ -200,6 +200,15 @@ function ListingUI({ listing, currentUserId, isDemo = false }: { listing: any, c
                             currentUserId={currentUserId}
                         />
 
+                        {currentUserId === listing.seller_id && (
+                            <Link 
+                                href={`/listing/${listing.id}/edit`}
+                                className="w-full mt-3 border border-border py-3 rounded-2xl flex items-center justify-center gap-2 text-sm font-black uppercase italic hover:bg-accent transition-all"
+                            >
+                                <Wrench className="h-4 w-4" /> Edit Listing
+                            </Link>
+                        )}
+
                         {/* Omniscient Stats */}
                         <div className="space-y-4 pt-8 border-t border-border">
                             <div className="flex justify-between items-center bg-muted/30 p-4 rounded-2xl border border-border/50">

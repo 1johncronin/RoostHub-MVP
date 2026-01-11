@@ -22,11 +22,22 @@ export default async function GaragePage({
     redirect('/login');
   }
 
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('*, invite_codes(code)')
     .eq('id', user.id)
-    .single();
+    .maybeSingle();
+
+  if (profileError || !profile) {
+    console.error('Profile fetch error:', profileError);
+    return (
+        <div className="container py-20 text-center">
+            <h1 className="text-2xl font-black uppercase italic">Profile Not Found</h1>
+            <p className="text-muted-foreground mt-2">There was an issue loading your rider profile. Please try logging in again.</p>
+            <Link href="/login" className="mt-6 inline-block bg-primary text-white px-8 py-3 rounded-xl font-bold uppercase italic">Login</Link>
+        </div>
+    );
+  }
 
   const { data: listings } = await supabase
     .from('listings')
@@ -38,7 +49,7 @@ export default async function GaragePage({
 
   return (
     <div className="container py-8 max-w-5xl min-h-screen">
-      {/* Stripe Status Toasts */}
+      {/* ... (Stripe Status Toasts) ... */}
       {params.success && (
         <div className="mb-8 p-4 bg-green-500/10 border border-green-500/20 rounded-2xl flex items-center gap-3 text-green-500 animate-in fade-in slide-in-from-top-4">
             <CheckCircle className="h-5 w-5" />
@@ -55,8 +66,12 @@ export default async function GaragePage({
       {/* Profile Header */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12 bg-muted/30 p-8 rounded-3xl border border-border">
         <div className="flex items-center gap-6">
-          <div className="h-24 w-24 rounded-full bg-primary/10 border-4 border-background flex items-center justify-center font-black text-4xl text-primary italic font-roboto-condensed">
-            {profile?.username?.[0].toUpperCase()}
+          <div className="h-24 w-24 rounded-full bg-primary/10 border-4 border-background flex items-center justify-center overflow-hidden font-black text-4xl text-primary italic font-roboto-condensed">
+            {profile?.avatar_url ? (
+                <img src={profile.avatar_url} alt={profile.username} className="w-full h-full object-cover" />
+            ) : (
+                profile?.username?.[0].toUpperCase()
+            )}
           </div>
           <div className="space-y-1">
             <h1 className="text-3xl font-black font-roboto-condensed italic uppercase tracking-tighter text-foreground">@{profile?.username}</h1>

@@ -10,7 +10,7 @@ export async function getAdminStats() {
   const { count: listingsCount } = await supabase.from('listings').select('*', { count: 'exact', head: true });
   const { data: payments } = await supabase.from('listing_promotions').select('amount_paid');
   
-  const totalRevenue = payments?.reduce((acc, curr) => acc + (curr.amount_paid || 0), 0) || 0;
+  const totalRevenue = payments?.reduce((acc: number, curr: any) => acc + (curr.amount_paid || 0), 0) || 0;
 
   return {
     usersCount: usersCount || 0,
