@@ -2,6 +2,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import Link from "next/link";
 import { ArrowRight, Bike, Zap } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
   return (
