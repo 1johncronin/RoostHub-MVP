@@ -11,7 +11,7 @@ interface WizardProps {
   userId: string;
 }
 
-type ListingType = 'machine' | 'part' | 'gear';
+type ListingType = 'machine' | 'part' | 'gear' | 'storage';
 
 export function ListingWizard({ userId }: WizardProps) {
   const [step, setStep] = useState(1);
@@ -30,6 +30,8 @@ export function ListingWizard({ userId }: WizardProps) {
     location: '',
     hours: '',
     miles: '',
+    space_type: 'Garage',
+    access_type: '24/7',
   });
 
   useEffect(() => {
@@ -127,19 +129,21 @@ export function ListingWizard({ userId }: WizardProps) {
         {step === 1 && (
           <div className="space-y-6">
             <h2 className="text-3xl font-black italic uppercase font-space-grotesk text-primary">What's for sale?</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {['machine', 'part', 'gear'].map((t) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+              {['machine', 'part', 'gear', 'storage'].map((t) => (
                 <button
                   key={t}
                   onClick={() => setFormData(prev => ({ ...prev, type: t as ListingType }))}
                   className={cn(
-                    "p-8 rounded-2xl border-2 text-left transition-all hover:border-primary group relative overflow-hidden",
+                    "p-6 rounded-2xl border-2 text-left transition-all hover:border-primary group relative overflow-hidden",
                     formData.type === t ? "border-primary bg-primary/5" : "border-border bg-muted/20"
                   )}
                 >
-                  <span className="capitalize font-black italic font-space-grotesk text-2xl block mb-1 group-hover:text-primary transition-colors">{t}</span>
-                  <span className="text-sm text-muted-foreground font-medium">
-                    {t === 'machine' ? 'Dirt bikes, sleds, ATVs' : t === 'part' ? 'Components & mods' : 'Helmets & apparel'}
+                  <span className="capitalize font-black italic font-space-grotesk text-xl block mb-1 group-hover:text-primary transition-colors">
+                    {t === 'storage' ? 'Roostorage' : t}
+                  </span>
+                  <span className="text-[10px] text-muted-foreground font-bold uppercase leading-tight">
+                    {t === 'machine' ? 'Dirt bikes, sleds, ATVs' : t === 'part' ? 'Components & mods' : t === 'gear' ? 'Helmets & apparel' : 'Lease space for toys'}
                   </span>
                 </button>
               ))}
@@ -152,41 +156,63 @@ export function ListingWizard({ userId }: WizardProps) {
             <h2 className="text-3xl font-black italic uppercase font-space-grotesk text-primary">The Specs</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                    <div>
-                        <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Year</label>
-                        <select name="year" value={formData.year} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold">
-                            {Array.from({length: 26}, (_, i) => 2026 - i).map(y => (
-                                <option key={y} value={y}>{y}</option>
-                            ))}
-                        </select>
+                {formData.type === 'storage' ? (
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Space Type</label>
+                            <select name="space_type" value={formData.space_type} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold">
+                                <option>Garage</option>
+                                <option>Shop</option>
+                                <option>Trailer Spot</option>
+                                <option>Covered Parking</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Access</label>
+                            <select name="access_type" value={formData.access_type} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold">
+                                <option>24/7</option>
+                                <option>Appointment Only</option>
+                                <option>Daylight Hours</option>
+                            </select>
+                        </div>
                     </div>
-
-                    <div>
-                        <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Make</label>
-                        <select name="make" value={formData.make} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold">
-                            <option value="">Select Brand</option>
-                            {MOTORSPORT_MAKES.map(m => (
-                                <option key={m.name} value={m.name}>{m.name}</option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div className="relative">
-                        <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Model</label>
-                        <input name="model" value={formData.model} onChange={handleChange} autoComplete="off" className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="e.g. 300 XC-W" />
-                        
-                        {suggestedModels.length > 0 && !formData.model.includes(suggestedModels[0]) && (
-                            <div className="absolute z-50 top-full left-0 w-full mt-2 bg-popover border border-border rounded-xl shadow-2xl p-2 max-h-48 overflow-y-auto overflow-x-hidden backdrop-blur-md">
-                                {suggestedModels.filter(m => m.toLowerCase().includes(formData.model.toLowerCase())).map(m => (
-                                    <button key={m} onClick={() => selectSuggestion(m)} className="w-full text-left px-4 py-2 hover:bg-primary hover:text-primary-foreground rounded-lg text-sm font-bold transition-colors truncate">
-                                        {m}
-                                    </button>
+                ) : (
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Year</label>
+                            <select name="year" value={formData.year} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold">
+                                {Array.from({length: 26}, (_, i) => 2026 - i).map(y => (
+                                    <option key={y} value={y}>{y}</option>
                                 ))}
-                            </div>
-                        )}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Make</label>
+                            <select name="make" value={formData.make} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold">
+                                <option value="">Select Brand</option>
+                                {MOTORSPORT_MAKES.map(m => (
+                                    <option key={m.name} value={m.name}>{m.name}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="relative">
+                            <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Model</label>
+                            <input name="model" value={formData.model} onChange={handleChange} autoComplete="off" className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="e.g. 300 XC-W" />
+                            
+                            {suggestedModels.length > 0 && !formData.model.includes(suggestedModels[0]) && (
+                                <div className="absolute z-50 top-full left-0 w-full mt-2 bg-popover border border-border rounded-xl shadow-2xl p-2 max-h-48 overflow-y-auto overflow-x-hidden backdrop-blur-md">
+                                    {suggestedModels.filter(m => m.toLowerCase().includes(formData.model.toLowerCase())).map(m => (
+                                        <button key={m} onClick={() => selectSuggestion(m)} className="w-full text-left px-4 py-2 hover:bg-primary hover:text-primary-foreground rounded-lg text-sm font-bold transition-colors truncate">
+                                            {m}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
+                )}
 
                 <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">

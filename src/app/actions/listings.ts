@@ -11,7 +11,7 @@ export async function createListing(formData: FormData) {
   const title = formData.get('title') as string;
   const price = parseFloat(formData.get('price') as string);
   const description = formData.get('description') as string;
-  const type = formData.get('type') as 'machine' | 'part' | 'gear';
+  const type = formData.get('type') as 'machine' | 'part' | 'gear' | 'storage';
   const location = formData.get('location') as string;
 
   // 1. Insert Listing
@@ -55,7 +55,23 @@ export async function createListing(formData: FormData) {
 
     if (machineError) {
        console.error('Machine error:', machineError);
-       // Ideally rollback listing here, but for MVP we continue
+    }
+  }
+
+  if (type === 'storage') {
+    const space_type = formData.get('space_type') as string;
+    const access_type = formData.get('access_type') as string;
+
+    const { error: storageError } = await supabase
+      .from('storage_spaces')
+      .insert({
+        listing_id: listing.id,
+        space_type,
+        access_type
+      });
+
+    if (storageError) {
+        console.error('Storage space error:', storageError);
     }
   }
 

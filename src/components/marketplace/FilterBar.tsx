@@ -10,6 +10,7 @@ const FILTERS = [
   { label: 'Machines', value: 'machine' },
   { label: 'Parts', value: 'part' },
   { label: 'Gear', value: 'gear' },
+  { label: 'Roostorage', value: 'storage' },
 ];
 
 const SORT_OPTIONS = [

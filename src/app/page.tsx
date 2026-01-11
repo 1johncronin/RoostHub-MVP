@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import Link from "next/link";
-import { ArrowRight, Bike, Zap } from "lucide-react";
+import { ArrowRight, Bike, Zap, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function Home() {
@@ -52,16 +52,17 @@ export default function Home() {
         {/* Categories Grid */}
         <section className="py-24 bg-muted/10 border-y border-border/50">
           <div className="container px-4 md:px-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 { title: "Machines", icon: Bike, desc: "MX, Enduro, Sleds, ATVs", color: "from-blue-500/20" },
                 { title: "Parts", icon: Zap, desc: "OEM, Aftermarket, Mods", color: "from-purple-500/20" },
                 { title: "Gear", icon: ArrowRight, desc: "Helmets, Boots, Kits", color: "from-pink-500/20" },
+                { title: "Roostorage", icon: ShieldCheck, desc: "Secure Space for your Toys", color: "from-amber-500/20" },
               ].map((cat, i) => (
                 <Link 
                   key={i} 
-                  href={`/marketplace?type=${cat.title.toLowerCase() === 'machines' ? 'machine' : cat.title.toLowerCase().replace(/s$/, '')}`}
-                  className="group relative overflow-hidden rounded-3xl border border-border bg-card p-10 hover:border-primary/50 transition-all hover:-translate-y-1 hover:shadow-xl"
+                  href={`/marketplace?type=${cat.title.toLowerCase() === 'machines' ? 'machine' : cat.title.toLowerCase() === 'roostorage' ? 'storage' : cat.title.toLowerCase().replace(/s$/, '')}`}
+                  className="group relative overflow-hidden rounded-3xl border border-border bg-card p-8 hover:border-primary/50 transition-all hover:-translate-y-1 hover:shadow-xl"
                 >
                   <div className={cn("absolute inset-0 bg-gradient-to-br to-transparent opacity-0 group-hover:opacity-100 transition-opacity", cat.color)} />
                   <div className="relative z-10">
