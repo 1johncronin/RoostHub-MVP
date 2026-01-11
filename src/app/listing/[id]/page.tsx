@@ -43,8 +43,8 @@ function DemoListingDetail({ id }: { id: string }) {
             is_featured: true,
             machines: { year: 2024, make: 'KTM', model: '300 XC-W', hours: 12, condition: 'excellent', vin: '1KTMXXXXXXXXXXXXX' },
             listing_media: [
-                { url: 'https://images.unsplash.com/photo-1558981806-ec527fa84c3d?q=80&w=1200&auto=format&fit=crop' },
-                { url: 'https://images.unsplash.com/photo-1558981359-219d6364c9c8?q=80&w=1200&auto=format&fit=crop' }
+                { url: 'https://images.unsplash.com/photo-1599819811279-d5ad9cccf838?q=80&w=1200&auto=format&fit=crop' },
+                { url: 'https://images.unsplash.com/photo-1444491741275-3747c53c99b4?q=80&w=1200&auto=format&fit=crop' }
             ],
             profiles: { username: 'ktm_rider', verification_level: 'verified' },
             description: 'Absolutely mint 2024 KTM 300 XC-W. Fuel injected, only 12 hours. Ready to roost. Comes with FMF Gnarly pipe and carbon guard. Meticulously maintained with records.',
@@ -61,7 +61,7 @@ function DemoListingDetail({ id }: { id: string }) {
             type: 'storage',
             is_featured: true,
             storage_spaces: { space_type: 'Shop', access_type: '24/7', has_security: true, has_climate_control: true },
-            listing_media: [{ url: 'https://images.unsplash.com/photo-1595079676339-1534801ad6cf?q=80&w=1200&auto=format&fit=crop' }],
+            listing_media: [{ url: 'https://images.unsplash.com/photo-1513828583688-c52646db42da?q=80&w=1200&auto=format&fit=crop' }],
             profiles: { username: 'shop_master', verification_level: 'verified' },
             description: 'Heated shop space available for rent. Secure, 24/7 access. Perfect for storing bikes or working on builds. Tools available for use.'
         }

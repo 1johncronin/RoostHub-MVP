@@ -19,24 +19,22 @@ export function ModeProvider({ children }: { children: React.ReactNode }) {
       <div className="relative min-h-screen">
         {children}
         
-        {/* Winter Mode: Snow Overlay */}
+        {/* Winter Mode: Ground Snow Effect */}
         {mode === 'winter' && (
-            <div className="fixed inset-0 pointer-events-none z-[100] overflow-hidden">
-                {Array.from({ length: 50 }).map((_, i) => (
-                    <div 
-                        key={i} 
-                        className="snowflake text-white absolute animate-snow"
-                        style={{
-                            left: `${Math.random() * 100}%`,
-                            animationDuration: `${Math.random() * 10 + 5}s`,
-                            animationDelay: `${Math.random() * 5}s`,
-                            opacity: Math.random(),
-                            fontSize: `${Math.random() * 10 + 10}px`
-                        }}
-                    >
-                        ❄
-                    </div>
-                ))}
+            <div className="fixed bottom-0 left-0 right-0 pointer-events-none z-[100] h-32 select-none">
+                {/* Subtle Snow Drifts */}
+                <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute bottom-0 w-full drop-shadow-[0_-10px_30px_rgba(255,255,255,0.3)]">
+                    <path 
+                        d="M0 120L1440 120V60C1200 40 1000 80 720 60C440 40 240 80 0 60V120Z" 
+                        fill="white" 
+                        className="opacity-90"
+                    />
+                    <path 
+                        d="M0 120L1440 120V80C1100 60 900 100 720 80C540 60 300 100 0 80V120Z" 
+                        fill="white" 
+                        className="opacity-60"
+                    />
+                </svg>
             </div>
         )}
 

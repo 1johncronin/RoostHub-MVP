@@ -27,9 +27,9 @@ VALUES
 -- 5. Seed Media (Unsplash placeholders)
 INSERT INTO listing_media (listing_id, url, media_type, sort_order)
 VALUES 
-('e1b1a1a1-1111-1111-1111-111111111111', 'https://images.unsplash.com/photo-1558981806-ec527fa84c3d?q=80&w=1200&auto=format&fit=crop', 'image', 0),
+('e1b1a1a1-1111-1111-1111-111111111111', 'https://images.unsplash.com/photo-1599819811279-d5ad9cccf838?q=80&w=1200&auto=format&fit=crop', 'image', 0),
 ('e2b2a2a2-2222-2222-2222-222222222222', 'https://images.unsplash.com/photo-1444491741275-3747c53c99b4?q=80&w=1200&auto=format&fit=crop', 'image', 0),
-('e3b3a3a3-3333-3333-3333-333333333333', 'https://images.unsplash.com/photo-1595079676339-1534801ad6cf?q=80&w=1200&auto=format&fit=crop', 'image', 0);
+('e3b3a3a3-3333-3333-3333-333333333333', 'https://images.unsplash.com/photo-1513828583688-c52646db42da?q=80&w=1200&auto=format&fit=crop', 'image', 0);
 
 -- 6. Seed Maintenance Logs
 INSERT INTO maintenance_logs (machine_id, user_id, service_type, hours, notes)
