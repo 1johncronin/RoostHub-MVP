@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { login, signup } from '../auth/actions'
 import { useState } from 'react'
 import { Loader2 } from 'lucide-react'
+import { Logo } from '@/components/layout/Logo'
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true)
@@ -21,17 +22,14 @@ export default function LoginPage() {
       setError(result.error)
       setLoading(false)
     }
-    // If success, the action redirects, so no need to stop loading manually
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-4 bg-muted/20">
+    <div className="flex min-h-screen flex-col items-center justify-center p-4 bg-muted/20 font-sans">
       <div className="w-full max-w-sm space-y-8 bg-background p-8 rounded-2xl border border-border shadow-sm">
-        <div className="text-center">
-          <h1 className="font-roboto-condensed font-bold italic text-4xl">
-            ROOST<span className="text-primary">HUB</span>
-          </h1>
-          <p className="mt-2 text-muted-foreground">
+        <div className="flex flex-col items-center text-center">
+          <Logo className="mb-4" />
+          <p className="text-muted-foreground text-sm font-medium">
             {isLogin ? 'Welcome back, rider.' : 'Join the community.'}
           </p>
         </div>
@@ -39,7 +37,7 @@ export default function LoginPage() {
         <form action={handleSubmit} className="space-y-4">
           {!isLogin && (
              <div className="space-y-2">
-              <label htmlFor="username" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              <label htmlFor="username" className="text-sm font-medium leading-none">
                 Username
               </label>
               <input
@@ -47,14 +45,14 @@ export default function LoginPage() {
                 name="username"
                 type="text"
                 required={!isLogin}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary outline-none"
                 placeholder="@roostking"
               />
             </div>
           )}
           
           <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            <label htmlFor="email" className="text-sm font-medium leading-none">
               Email
             </label>
             <input
@@ -62,21 +60,28 @@ export default function LoginPage() {
               name="email"
               type="email"
               required
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary outline-none"
               placeholder="braap@example.com"
             />
           </div>
           
           <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              Password
-            </label>
+            <div className="flex items-center justify-between">
+                <label htmlFor="password" className="text-sm font-medium leading-none">
+                Password
+                </label>
+                {isLogin && (
+                    <Link href="/auth/forgot-password" className="text-xs text-muted-foreground hover:text-primary">
+                        Forgot Password?
+                    </Link>
+                )}
+            </div>
             <input
               id="password"
               name="password"
               type="password"
               required
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary outline-none"
             />
           </div>
 

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Menu, Search, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Logo } from './Logo';
 
 export function Navbar() {
   return (
@@ -12,10 +13,8 @@ export function Navbar() {
             <Menu className="h-6 w-6" />
           </button>
           
-          <Link href="/" className="flex items-center gap-2">
-            <span className="font-roboto-condensed font-bold italic text-2xl tracking-tight">
-              ROOST<span className="text-primary">HUB</span>
-            </span>
+          <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
+            <Logo />
           </Link>
 
           {/* Desktop Nav */}

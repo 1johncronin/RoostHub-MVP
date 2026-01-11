@@ -37,17 +37,22 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const isAuthPage = request.nextUrl.pathname.startsWith('/login') || 
-                     request.nextUrl.pathname.startsWith('/auth')
-  
-  const isPublicPage = request.nextUrl.pathname === '/' ||
-                       request.nextUrl.pathname.startsWith('/marketplace') ||
-                       request.nextUrl.pathname.startsWith('/search') ||
-                       request.nextUrl.pathname.startsWith('/listing')
+  const path = request.nextUrl.pathname
 
-  if (!user && !isAuthPage && !isPublicPage) {
+  // Public routes that don't require auth
+  const isPublicRoute = 
+    path === '/' ||
+    path.startsWith('/marketplace') ||
+    path.startsWith('/listing') ||
+    path.startsWith('/login') ||
+    path.startsWith('/auth') ||
+    path.startsWith('/api') ||
+    path.includes('.') // Allow all files with extensions (images, manifest, etc)
+
+  if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
+    url.searchParams.set('returnTo', path)
     return NextResponse.redirect(url)
   }
 
