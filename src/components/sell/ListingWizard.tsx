@@ -125,10 +125,19 @@ export function ListingWizard({ userId }: WizardProps) {
             form.append(key, value);
         });
         form.append('userId', userId);
-        const { id: listingId } = await createListing(form) as any;
+        
+        const result = await createListing(form) as any;
+
+        if (result?.error) {
+            alert("Oops! " + result.error);
+            setLoading(false);
+            return;
+        }
+
+        const listingId = result.id;
 
         // 2. Upload Files if any
-        if (files.length > 0) {
+        if (files.length > 0 && listingId) {
             setUploading(true);
             for (const file of files) {
                 const path = `${userId}/${listingId}/${Date.now()}-${file.name}`;
@@ -147,9 +156,9 @@ export function ListingWizard({ userId }: WizardProps) {
             }
         }
         window.location.href = '/marketplace';
-    } catch (e) {
+    } catch (e: any) {
         console.error(e);
-        alert("Submission failed");
+        alert("Submission failed: " + (e.message || "Unknown error"));
     } finally {
         setLoading(false);
     }
