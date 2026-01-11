@@ -38,17 +38,17 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://roosthub.com'), // Replace with your actual domain if different
+  metadataBase: new URL('https://roosthub.com'),
   title: "RoostHub | Marketplace for Dirt & Snow",
   description: "Buy, sell, and showcase your dirt bikes, snowmobiles, and gear.",
-  manifest: "/manifest.json",
+  manifest: "/manifest.json?v=2",
   icons: {
     icon: [
-      { url: "/favicon.ico" },
-      { url: "/favicon.png", type: "image/png" },
+      { url: "/favicon.ico?v=2" },
+      { url: "/favicon.png?v=2", type: "image/png" },
     ],
     apple: [
-      { url: "/icon-512.png" },
+      { url: "/icon-512.png?v=2" },
     ],
   },
   appleWebApp: {
