@@ -42,9 +42,11 @@ export default function SettingsPage() {
   ];
 
   async function handleSetBrand(brandId: string) {
+    console.log('Switching to brand:', brandId);
+    setBrand(brandId); // Optimistic Update (Immediate UI change)
+    
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
-        setBrand(brandId);
         await supabase.from('profiles').update({ theme_brand: brandId }).eq('id', user.id);
         setProfile((prev: any) => ({ ...prev, theme_brand: brandId }));
     }
@@ -78,19 +80,19 @@ export default function SettingsPage() {
   if (loading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" /></div>;
 
   return (
-    <div className="container max-w-2xl py-12">
+    <div className="container max-w-2xl py-12 pb-32">
       <h1 className="text-3xl font-black italic uppercase font-space-grotesk mb-8 text-primary tracking-tight">Customization</h1>
       
       <div className="space-y-8">
         {/* Brand Theme Card */}
-        <div className="bg-card border border-border p-8 rounded-3xl space-y-6 shadow-xl">
+        <div className="bg-card border border-border p-8 rounded-3xl space-y-6 shadow-xl relative z-20">
             <div className="flex items-center gap-4">
                 <div className="p-3 bg-primary/10 rounded-2xl">
                     <Bike className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                    <h3 className="font-black text-xl italic uppercase font-space-grotesk">Choose your Brand</h3>
-                    <p className="text-sm text-muted-foreground font-medium uppercase tracking-tight">Personalize the app colors for your machine.</p>
+                    <h3 className="font-black text-xl italic uppercase font-space-grotesk text-foreground">Choose your Brand</h3>
+                    <p className="text-sm text-muted-foreground font-medium uppercase tracking-tight leading-tight">Skin the entire app for your machine.</p>
                 </div>
             </div>
 
@@ -98,57 +100,64 @@ export default function SettingsPage() {
                 {BRANDS.map((b) => (
                     <button
                         key={b.id}
+                        type="button"
                         onClick={() => handleSetBrand(b.id)}
                         className={cn(
-                            "flex items-center gap-3 p-3 rounded-2xl border-2 transition-all group",
-                            profile?.theme_brand === b.id ? "border-primary bg-primary/5" : "border-border hover:border-primary/30"
+                            "flex items-center gap-3 p-4 rounded-2xl border-2 transition-all group cursor-pointer active:scale-95",
+                            brand === b.id ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(124,58,237,0.2)]" : "border-border hover:border-primary/30"
                         )}
                     >
-                        <div className={cn("h-4 w-4 rounded-full shadow-inner", b.color)} />
-                        <span className="text-[10px] font-black uppercase italic truncate">{b.name}</span>
+                        <div className={cn("h-4 w-4 rounded-full shadow-inner shrink-0", b.color)} />
+                        <span className={cn(
+                            "text-[10px] font-black uppercase italic truncate",
+                            brand === b.id ? "text-primary" : "text-muted-foreground"
+                        )}>{b.name}</span>
                     </button>
                 ))}
             </div>
         </div>
 
         {/* Visual Effects Card */}
-        <div className="bg-card border border-border p-8 rounded-3xl space-y-6 shadow-xl">
+        <div className="bg-card border border-border p-8 rounded-3xl space-y-6 shadow-xl relative z-20">
             <div className="flex items-center gap-4">
                 <div className="p-3 bg-primary/10 rounded-2xl">
                     <Zap className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                    <h3 className="font-black text-xl italic uppercase font-space-grotesk">Visual Effects</h3>
-                    <p className="text-sm text-muted-foreground font-medium uppercase tracking-tight">Override the screen vibe.</p>
+                    <h3 className="font-black text-xl italic uppercase font-space-grotesk text-foreground">Screen Vibe</h3>
+                    <p className="text-sm text-muted-foreground font-medium uppercase tracking-tight">Environmental Overlays.</p>
                 </div>
             </div>
 
             <div className="grid grid-cols-3 gap-3">
                 <button
+                    type="button"
                     onClick={() => setMode('normal')}
                     className={cn(
-                        "flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all",
-                        mode === 'normal' ? "border-primary bg-primary/5" : "border-border"
+                        "flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all cursor-pointer active:scale-95",
+                        mode === 'normal' ? "border-primary bg-primary/5 shadow-lg" : "border-border"
                     )}
                 >
                     <Sun className="h-5 w-5 text-muted-foreground" />
                     <span className="text-[10px] font-black uppercase italic">Normal</span>
                 </button>
                 <button
+                    type="button"
                     onClick={() => setMode('winter')}
                     className={cn(
-                        "flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all",
-                        mode === 'winter' ? "border-primary bg-primary/5 shadow-[0_0_20px_rgba(255,255,255,0.2)]" : "border-border"
+                        "flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all cursor-pointer active:scale-95",
+                        mode === 'winter' ? "border-primary bg-primary/5 shadow-lg" : "border-border"
                     )}
                 >
                     <Snowflake className="h-5 w-5 text-blue-400" />
                     <span className="text-[10px] font-black uppercase italic">Winter</span>
                 </button>
                 <button
+                    type="button"
                     onClick={() => setMode('dirty')}
                     className={cn(
-                        "flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all",
-                        mode === 'dirty' ? "border-primary bg-primary/5" : "border-border"
+                        "flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all cursor-pointer active:scale-95",
+                        mode === 'dirty' ? "border-primary bg-primary/5 shadow-lg" : "border-border"
                     )}
                 >
                     <Droplets className="h-5 w-5 text-[#4a3721]" />
@@ -218,7 +227,7 @@ export default function SettingsPage() {
                     <button 
                         onClick={handleSendOTP}
                         disabled={verifyingPhone}
-                        className="bg-primary text-primary-foreground px-4 py-2 rounded-md font-bold text-sm disabled:opacity-50"
+                        className="bg-primary text-primary-foreground px-4 py-2 rounded-md font-bold text-sm disabled:opacity-50 cursor-pointer"
                     >
                         Send OTP
                     </button>
@@ -235,7 +244,7 @@ export default function SettingsPage() {
                     <button 
                         onClick={handleVerifyOTP}
                         disabled={verifyingPhone}
-                        className="bg-primary text-primary-foreground px-4 py-2 rounded-md font-bold text-sm disabled:opacity-50"
+                        className="bg-primary text-primary-foreground px-4 py-2 rounded-md font-bold text-sm disabled:opacity-50 cursor-pointer"
                     >
                         Verify
                     </button>
@@ -249,7 +258,7 @@ export default function SettingsPage() {
                 "p-8 rounded-[32px] border-2 flex flex-col items-center text-center gap-4 transition-all shadow-2xl",
                 profile?.verification_level === 'verified' ? "border-primary bg-primary/5" : "border-dashed border-border bg-muted/20"
             )}>
-                <ShieldCheck className={cn("h-16 w-16 transition-all", profile?.verification_level === 'verified' ? "text-primary" : "text-muted-foreground opacity-30")} />
+                <ShieldCheck className={cn("h-16 w-16 transition-all", profile?.verification_level === 'verified' ? "text-primary animate-bounce-slow" : "text-muted-foreground opacity-30")} />
                 <div>
                     <h3 className="text-2xl font-black italic uppercase font-space-grotesk tracking-tight">Status: <span className="text-primary">{profile?.verification_level || 'BASIC'}</span></h3>
                     <p className="text-sm text-muted-foreground mt-2 max-w-sm font-medium leading-relaxed uppercase tracking-tight">
