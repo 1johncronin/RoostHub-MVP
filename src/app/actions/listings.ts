@@ -6,8 +6,10 @@ import { redirect } from 'next/navigation';
 
 export async function createListing(formData: FormData) {
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) return { error: 'Unauthorized' };
   
-  const userId = formData.get('userId') as string;
   const title = formData.get('title') as string;
   const price = parseFloat(formData.get('price') as string);
   const description = formData.get('description') as string;
@@ -18,7 +20,7 @@ export async function createListing(formData: FormData) {
   const { data: listing, error: listingError } = await supabase
     .from('listings')
     .insert({
-      seller_id: userId,
+      seller_id: user.id, // Use server-side verified ID
       title,
       price,
       description,
