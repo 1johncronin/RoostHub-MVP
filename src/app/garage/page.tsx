@@ -79,8 +79,18 @@ export default async function GaragePage() {
                             <div className="text-sm text-muted-foreground mt-1">
                                 {l.machines?.year} {l.machines?.make} {l.machines?.model}
                             </div>
-                            <div className="mt-4 flex gap-2">
-                                <Link href={`/listing/${l.id}`} className="text-xs font-bold text-primary hover:underline">View Listing</Link>
+                            <div className="mt-4 flex items-center gap-3">
+                                <Link href={`/listing/${l.id}`} className="text-xs font-bold text-primary hover:underline">View</Link>
+                                <span className="text-xs text-muted-foreground">•</span>
+                                <form action={async () => {
+                                    'use server';
+                                    const { createBoostCheckout } = await import('@/app/actions/stripe');
+                                    await createBoostCheckout(l.id);
+                                }}>
+                                    <button type="submit" className="text-xs font-black text-white bg-primary px-2 py-1 rounded hover:bg-primary/80 transition-colors uppercase italic">
+                                        Boost $19
+                                    </button>
+                                </form>
                                 <span className="text-xs text-muted-foreground">•</span>
                                 <button className="text-xs font-bold text-muted-foreground hover:text-foreground">Edit</button>
                             </div>
