@@ -12,6 +12,10 @@ export async function updateProfile(formData: FormData) {
   const full_name = formData.get('full_name') as string;
   const username = formData.get('username') as string;
   const avatar_url = formData.get('avatar_url') as string;
+  const city = formData.get('city') as string;
+  const state = formData.get('state') as string;
+  const postal_code = formData.get('postal_code') as string;
+  const country = formData.get('country') as string;
 
   const { error } = await supabase
     .from('profiles')
@@ -19,6 +23,10 @@ export async function updateProfile(formData: FormData) {
       full_name,
       username,
       avatar_url,
+      city,
+      state,
+      postal_code,
+      country,
       updated_at: new Date().toISOString()
     })
     .eq('id', user.id);

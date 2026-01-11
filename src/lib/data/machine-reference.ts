@@ -15,6 +15,15 @@ export const MOTORSPORT_MAKES = [
   { name: 'Timbersled', types: ['part'], categories: ['Snowbike Kit'] },
 ];
 
+export const BRAND_RETAILERS: Record<string, { oem: string; aftermarket: string; specialties?: string[] }> = {
+  'KTM': { oem: 'Partzilla', aftermarket: 'Rocky Mountain ATV/MC', specialties: ['AOMC', 'KTM World'] },
+  'Yamaha': { oem: 'Partzilla', aftermarket: 'RevZilla', specialties: ['Yamaha Sports Center'] },
+  'Honda': { oem: 'Partzilla', aftermarket: 'Rocky Mountain ATV/MC', specialties: ['Honda Parts House'] },
+  'Polaris': { oem: 'Polaris OEM', aftermarket: 'Rocky Mountain ATV/MC', specialties: ['Starting Line Products'] },
+  'Ski-Doo': { oem: 'BRP OEM', aftermarket: 'Dennis Kirk', specialties: ['ZRP', 'Backwoods BMP'] },
+  'Arctic Cat': { oem: 'Country Cat', aftermarket: 'Rocky Mountain ATV/MC' },
+};
+
 export const MACHINE_MODELS: Record<string, string[]> = {
   'KTM': ['125 SX', '150 SX', '250 SX', '250 SX-F', '350 SX-F', '450 SX-F', '150 XC-W', '250 XC-W', '300 XC-W', '350 EXC-F', '500 EXC-F', '690 Enduro R'],
   'Yamaha': ['YZ125', 'YZ250', 'YZ250F', 'YZ450F', 'YZ250X', 'YZ250FX', 'WR250F', 'WR450F', 'Ténéré 700'],

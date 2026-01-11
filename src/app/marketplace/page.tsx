@@ -4,7 +4,7 @@ import { MarketplaceContainer } from '@/components/marketplace/MarketplaceContai
 export default async function MarketplacePage({
   searchParams,
 }: {
-  searchParams: Promise<{ type?: string; q?: string; sort?: string; view?: string }>;
+  searchParams: Promise<{ type?: string; q?: string; sort?: string; view?: string; zip?: string; radius?: string }>;
 }) {
   const supabase = await createClient();
   const params = await searchParams;
@@ -12,6 +12,13 @@ export default async function MarketplacePage({
   const type = params.type;
   const query = params.q;
   const sort = params.sort || 'newest';
+  const zip = params.zip;
+  const radius = params.radius;
+
+  // Simple geocoding resolver for zip codes (in production, use a proper API)
+  let lat = null, lng = null;
+  if (zip === '97701') { lat = 44.0582; lng = -121.3153; }
+  if (zip === '59715') { lat = 45.6770; lng = -111.0429; }
 
   let dbQuery = supabase
     .from('listings')
@@ -30,7 +37,20 @@ export default async function MarketplacePage({
     dbQuery = dbQuery.or(`title.ilike.%${query}%,description.ilike.%${query}%`);
   }
 
-  if (sort === 'newest') {
+  // RADIUS FILTER (using PostGIS)
+  if (lat && lng && radius && radius !== 'all') {
+    const radiusMeters = parseInt(radius) * 1609.34; // Miles to meters
+    // Use .rpc if calling a custom function, or a raw filter if the client supports it.
+    // Since we added geo_location, we can use the ST_DWithin logic.
+    // Note: Standard Supabase JS client doesn't support complex PostGIS directly in .select()
+    // but we can use .filter with the custom column
+    dbQuery = dbQuery.filter('geo_location', 'st_dwithin', `ST_SetSRID(ST_Point(${lng}, ${lat}), 4326)::geography, ${radiusMeters}`);
+  }
+
+  if (sort === 'nearest' && lat && lng) {
+    // Sorting by distance
+    dbQuery = dbQuery.order('geo_location <-> ST_SetSRID(ST_Point(' + lng + ',' + lat + '), 4326)::geography');
+  } else if (sort === 'newest') {
     dbQuery = dbQuery.order('created_at', { ascending: false });
   } else if (sort === 'price_low') {
     dbQuery = dbQuery.order('price', { ascending: true });

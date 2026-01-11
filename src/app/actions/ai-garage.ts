@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { Groq } from 'groq-sdk';
+import { BRAND_RETAILERS } from '@/lib/data/machine-reference';
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -20,6 +21,8 @@ export async function askGarageAI(machineId: string, message: string) {
 
   if (!machine) return { error: 'Machine not found' };
 
+  const retailers = BRAND_RETAILERS[machine.make] || { oem: 'Partzilla', aftermarket: 'Rocky Mountain ATV/MC' };
+
   // 2. Save User Message
   await supabase.from('garage_ai_chats').insert({
     user_id: user.id,
@@ -37,6 +40,11 @@ export async function askGarageAI(machineId: string, message: string) {
         You have deep, expert-level knowledge across all categories: Dirt Bikes, Snowmobiles (Mountain, Trail), OHVs, Side-by-Sides, and Snowbike kits (Timbersled).
         
         You are helping a user with their ${machine.year} ${machine.make} ${machine.model} (${machine.hours} hours).
+        
+        Know Your Retailers:
+        - For OEM parts for this ${machine.make}, recommend ${retailers.oem}.
+        - For Aftermarket performance and tires, recommend ${retailers.aftermarket}.
+        ${retailers.specialties ? `- Specialized shops for this brand include: ${retailers.specialties.join(', ')}.` : ''}
         
         Provide high-performance, technical, and precise advice. Whether it's torque specs, piston life, track tension for sleds, or suspension tuning for rough terrain—you know it all. 
         Be professional, authoritative, and helpful. RoostHub is the home for their entire collection.`

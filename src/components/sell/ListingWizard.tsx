@@ -29,6 +29,7 @@ export function ListingWizard({ userId, initialData }: WizardProps) {
     model: initialData?.machines?.model || '',
     year: initialData?.machines?.year?.toString() || '2024',
     location: initialData?.location_name || '',
+    postal_code: initialData?.postal_code || '',
     hours: initialData?.machines?.hours?.toString() || '',
     miles: initialData?.machines?.mileage?.toString() || '',
     vin: initialData?.machines?.vin || '',
@@ -277,17 +278,14 @@ export function ListingWizard({ userId, initialData }: WizardProps) {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Price Per Month ($)</label>
-                                <div className="relative">
-                                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
-                                    <input name="price" type="number" value={formData.price} onChange={handleChange} className="w-full pl-10 pr-4 py-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-black text-xl text-primary" placeholder="0.00" />
-                                </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                            <div className="sm:col-span-2">
+                                <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Location (City, State)</label>
+                                <input name="location" value={formData.location} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="e.g. Bend, OR" />
                             </div>
                             <div>
-                                <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Location</label>
-                                <input name="location" value={formData.location} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="City, State" />
+                                <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Zip/Postal Code</label>
+                                <input name="postal_code" value={formData.postal_code} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="97701" />
                             </div>
                         </div>
 
@@ -383,9 +381,15 @@ export function ListingWizard({ userId, initialData }: WizardProps) {
                                     </div>
                                 )}
                             </div>
-                            <div>
-                                <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Location</label>
-                                <input name="location" value={formData.location} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="City, State" />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Location (City, State)</label>
+                                    <input name="location" value={formData.location} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="e.g. Bozeman, MT" />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Zip/Postal Code</label>
+                                    <input name="postal_code" value={formData.postal_code} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="59715" />
+                                </div>
                             </div>
                         </div>
                     </>

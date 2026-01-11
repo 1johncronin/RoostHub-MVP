@@ -6,44 +6,5 @@
 - Environments: .env.local
 
   Creating an optimized production build ...
-✓ Compiled successfully in 7.6s
+✓ Compiled successfully in 9.4s
   Running TypeScript ...
-  Collecting page data using 7 workers ...
-  Generating static pages using 7 workers (0/20) ...
-  Generating static pages using 7 workers (5/20) 
-  Generating static pages using 7 workers (10/20) 
-  Generating static pages using 7 workers (15/20) 
-✓ Generating static pages using 7 workers (20/20) in 272.1ms
-  Finalizing page optimization ...
-
-Route (app)
-┌ ƒ /
-├ ƒ /_not-found
-├ ƒ /admin
-├ ƒ /api/ai/analyze-image
-├ ƒ /api/ai/analyze-machine
-├ ƒ /api/ai/decode-vin
-├ ƒ /api/alerts
-├ ƒ /api/webhooks/stripe
-├ ƒ /api/worker
-├ ƒ /auth/callback
-├ ƒ /auth/forgot-password
-├ ƒ /auth/update-password
-├ ƒ /dj-booth
-├ ƒ /garage
-├ ƒ /garage/add
-├ ƒ /garage/settings
-├ ƒ /listing/[id]
-├ ƒ /listing/[id]/edit
-├ ƒ /login
-├ ƒ /marketplace
-├ ƒ /messages
-├ ƒ /messages/[id]
-├ ƒ /post/[id]
-└ ƒ /sell
-
-
-ƒ Proxy (Middleware)
-
-ƒ  (Dynamic)  server-rendered on demand
-

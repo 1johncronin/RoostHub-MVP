@@ -15,6 +15,12 @@ export async function createListing(formData: FormData) {
   const description = formData.get('description') as string;
   const type = formData.get('type') as 'machine' | 'part' | 'gear' | 'storage';
   const location = formData.get('location') as string;
+  const postal_code = formData.get('postal_code') as string;
+
+  // Simple geocoding stub - in production, use Google Maps or Mapbox API
+  let lat = null, lng = null;
+  if (postal_code === '97701') { lat = 44.0582; lng = -121.3153; } // Bend, OR
+  if (postal_code === '59715') { lat = 45.6770; lng = -111.0429; } // Bozeman, MT
 
   // 1. Insert Listing
   const { data: listing, error: listingError } = await supabase
@@ -26,6 +32,9 @@ export async function createListing(formData: FormData) {
       description,
       type,
       location_name: location,
+      postal_code,
+      location_lat: lat,
+      location_lng: lng,
       status: 'active'
     })
     .select()
@@ -94,6 +103,12 @@ export async function updateListing(listingId: string, formData: FormData) {
   const description = formData.get('description') as string;
   const type = formData.get('type') as 'machine' | 'part' | 'gear' | 'storage';
   const location = formData.get('location') as string;
+  const postal_code = formData.get('postal_code') as string;
+
+  // Simple geocoding stub
+  let lat = null, lng = null;
+  if (postal_code === '97701') { lat = 44.0582; lng = -121.3153; }
+  if (postal_code === '59715') { lat = 45.6770; lng = -111.0429; }
 
   // 1. Update Listing
   const { data: listing, error: listingError } = await supabase
@@ -104,6 +119,9 @@ export async function updateListing(listingId: string, formData: FormData) {
       description,
       type,
       location_name: location,
+      postal_code,
+      location_lat: lat,
+      location_lng: lng,
       updated_at: new Date().toISOString()
     })
     .eq('id', listingId)

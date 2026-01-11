@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
-import { CheckCircle, XCircle, Phone, Mail, ShieldCheck, Loader2, Bike, Zap, Snowflake, Droplets, Sun } from 'lucide-react';
+import { CheckCircle, XCircle, Phone, Mail, ShieldCheck, Loader2, Bike, Zap, Snowflake, Droplets, Sun, MapPin, Save } from 'lucide-react';
 import { useVisualMode } from '@/components/mode-provider';
+import { updateProfile as updateProfileAction } from '@/app/actions/profiles';
 
 export default function SettingsPage() {
   const supabase = createClient();
@@ -112,6 +113,16 @@ export default function SettingsPage() {
       }
     }
     setVerifyingPhone(false);
+  }
+
+  async function handleSaveLocation(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setLoading(true);
+    const formData = new FormData(e.currentTarget);
+    const res = await updateProfileAction(formData);
+    if (res.success) alert("Basecamp updated!");
+    else alert(res.error);
+    setLoading(false);
   }
 
   if (loading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" /></div>;
@@ -240,6 +251,48 @@ export default function SettingsPage() {
                     <span className="text-[10px] font-black uppercase italic">Dirty</span>
                 </button>
             </div>
+        </div>
+
+        {/* Basecamp Location Card */}
+        <div className="bg-card border border-border p-8 rounded-3xl space-y-6 shadow-xl relative z-20">
+            <div className="flex items-center gap-4">
+                <div className="p-3 bg-primary/10 rounded-2xl">
+                    <MapPin className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                    <h3 className="font-black text-xl italic uppercase font-space-grotesk text-foreground">Basecamp</h3>
+                    <p className="text-sm text-muted-foreground font-medium uppercase tracking-tight">Your Home Location for Local Search.</p>
+                </div>
+            </div>
+
+            <form onSubmit={handleSaveLocation} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">City</label>
+                        <input name="city" defaultValue={profile?.city} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="e.g. Bend" />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">State / Province</label>
+                        <input name="state" defaultValue={profile?.state} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="e.g. OR" />
+                    </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Zip / Postal Code</label>
+                        <input name="postal_code" defaultValue={profile?.postal_code} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="e.g. 97701" />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Country</label>
+                        <input name="country" defaultValue={profile?.country || 'USA'} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="e.g. USA" />
+                    </div>
+                </div>
+                <button 
+                    type="submit"
+                    className="w-full bg-primary text-primary-foreground py-4 rounded-2xl font-black uppercase italic text-sm hover:scale-[1.02] transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2"
+                >
+                    <Save className="h-4 w-4" /> Save Basecamp
+                </button>
+            </form>
         </div>
 
         <h2 className="text-2xl font-black italic uppercase font-space-grotesk text-primary tracking-tight mt-12">Trust & Verification</h2>

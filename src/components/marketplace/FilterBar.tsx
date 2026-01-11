@@ -114,6 +114,31 @@ export function FilterBar({ currentType }: { currentType?: string }) {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-2">
+        <div className="flex gap-2">
+            <div className="relative w-28 shrink-0">
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <input
+                    type="text"
+                    placeholder="Zip"
+                    value={zip}
+                    onChange={(e) => setZip(e.target.value)}
+                    maxLength={5}
+                    className="w-full pl-9 pr-2 py-2 rounded-xl bg-muted/50 border border-border focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all text-sm font-bold"
+                />
+            </div>
+            <select
+                value={radius}
+                onChange={(e) => setRadius(e.target.value)}
+                className="bg-muted/50 border border-border rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all cursor-pointer uppercase italic"
+            >
+                {RADIUS_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                    </option>
+                ))}
+            </select>
+        </div>
+
         <div className="relative flex-1 sm:w-64">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input
