@@ -1,13 +1,18 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import { Bike, Settings, Plus, Share2, ShieldCheck, Wrench, AlertTriangle, History } from 'lucide-react';
+import { Bike, Settings, Plus, Share2, ShieldCheck, Wrench, AlertTriangle, History, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { getDueServices } from '@/lib/data/maintenance-intelligence';
 import { HistoryButton } from '@/components/garage/HistoryButton';
 
-export default async function GaragePage() {
+export default async function GaragePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ success?: string; canceled?: string }>;
+}) {
   const supabase = await createClient();
+  const params = await searchParams;
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
@@ -28,6 +33,19 @@ export default async function GaragePage() {
 
   return (
     <div className="container py-8 max-w-5xl min-h-screen">
+      {/* Stripe Status Toasts */}
+      {params.success && (
+        <div className="mb-8 p-4 bg-green-500/10 border border-green-500/20 rounded-2xl flex items-center gap-3 text-green-500 animate-in fade-in slide-in-from-top-4">
+            <CheckCircle className="h-5 w-5" />
+            <p className="text-sm font-black uppercase italic tracking-tight">Listing Boosted Successfully! Your machine is now featured.</p>
+        </div>
+      )}
+      {params.canceled && (
+        <div className="mb-8 p-4 bg-destructive/10 border border-destructive/20 rounded-2xl flex items-center gap-3 text-destructive">
+            <AlertTriangle className="h-5 w-5" />
+            <p className="text-sm font-black uppercase italic tracking-tight">Checkout canceled. No charges were made.</p>
+        </div>
+      )}
       {/* ... previous header logic ... */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12 bg-muted/30 p-8 rounded-3xl border border-border">
         <div className="flex items-center gap-6">
