@@ -33,11 +33,16 @@ export default function DJBoothPage() {
 
         // 1. Upload File
         const fileName = `${user.id}/reels/${Date.now()}-${selectedFile.name}`;
-        const { error: uploadError } = await supabase.storage
-            .from('listing-media') // Using same bucket for simplicity
+        console.log('Uploading DJ reel to path:', fileName);
+
+        const { data: uploadData, error: uploadError } = await supabase.storage
+            .from('listing-media') 
             .upload(fileName, selectedFile);
 
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+            console.error('DJ Upload Error:', uploadError);
+            throw uploadError;
+        }
 
         const { data: { publicUrl } } = supabase.storage.from('listing-media').getPublicUrl(fileName);
 

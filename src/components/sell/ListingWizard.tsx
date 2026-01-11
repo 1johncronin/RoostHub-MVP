@@ -119,6 +119,13 @@ export function ListingWizard({ userId }: WizardProps) {
   const handleSubmit = async () => {
     setLoading(true);
     try {
+        console.log('Starting submission...');
+        
+        // Check buckets first
+        const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets();
+        console.log('Available buckets:', buckets);
+        if (bucketsError) console.error('Buckets fetch error:', bucketsError);
+
         // 1. Create the listing
         const form = new FormData();
         Object.entries(formData).forEach(([key, value]) => {
@@ -139,19 +146,41 @@ export function ListingWizard({ userId }: WizardProps) {
         // 2. Upload Files if any
         if (files.length > 0 && listingId) {
             setUploading(true);
+            
+            // Verify bucket existence
+            const { data: bucket, error: bucketError } = await supabase.storage.getBucket('listing-media');
+            if (bucketError) {
+                console.error('Bucket check error:', bucketError);
+                alert("Storage bucket 'listing-media' not found. Please create it in your Supabase dashboard.");
+                setLoading(false);
+                return;
+            }
+
             for (const file of files) {
                 const path = `${userId}/${listingId}/${Date.now()}-${file.name}`;
-                const { data, error } = await supabase.storage
+                console.log('Uploading to path:', path);
+                
+                const { data, error: uploadError } = await supabase.storage
                     .from('listing-media')
                     .upload(path, file);
                 
+                if (uploadError) {
+                    console.error('Upload error:', uploadError);
+                    alert(`Error uploading ${file.name}: ${uploadError.message}`);
+                    continue;
+                }
+
                 if (data) {
                     const { data: { publicUrl } } = supabase.storage.from('listing-media').getPublicUrl(path);
-                    await supabase.from('listing_media').insert({
+                    const { error: mediaError } = await supabase.from('listing_media').insert({
                         listing_id: listingId,
                         url: publicUrl,
                         media_type: file.type.startsWith('video') ? 'video' : 'image'
                     });
+                    
+                    if (mediaError) {
+                        console.error('Media DB error:', mediaError);
+                    }
                 }
             }
         }
