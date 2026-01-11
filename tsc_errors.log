@@ -1,0 +1,30 @@
+error TS2688: Cannot find type definition file for 'estree 2'.
+  The file is in the program because:
+    Entry point for implicit type library 'estree 2'
+error TS2688: Cannot find type definition file for 'geojson 2'.
+  The file is in the program because:
+    Entry point for implicit type library 'geojson 2'
+error TS2688: Cannot find type definition file for 'json-schema 2'.
+  The file is in the program because:
+    Entry point for implicit type library 'json-schema 2'
+error TS2688: Cannot find type definition file for 'json5 2'.
+  The file is in the program because:
+    Entry point for implicit type library 'json5 2'
+error TS2688: Cannot find type definition file for 'leaflet 2'.
+  The file is in the program because:
+    Entry point for implicit type library 'leaflet 2'
+error TS2688: Cannot find type definition file for 'node-fetch 2'.
+  The file is in the program because:
+    Entry point for implicit type library 'node-fetch 2'
+error TS2688: Cannot find type definition file for 'pako 2'.
+  The file is in the program because:
+    Entry point for implicit type library 'pako 2'
+error TS2688: Cannot find type definition file for 'phoenix 2'.
+  The file is in the program because:
+    Entry point for implicit type library 'phoenix 2'
+error TS2688: Cannot find type definition file for 'raf 2'.
+  The file is in the program because:
+    Entry point for implicit type library 'raf 2'
+error TS2688: Cannot find type definition file for 'ws 2'.
+  The file is in the program because:
+    Entry point for implicit type library 'ws 2'
