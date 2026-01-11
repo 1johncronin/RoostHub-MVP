@@ -36,16 +36,30 @@ export function ListingWizard({ userId }: WizardProps) {
   });
 
   useEffect(() => {
-    if (formData.make && MACHINE_MODELS[formData.make]) {
-        setSuggestedModels(MACHINE_MODELS[formData.make]);
-    } else {
-        setSuggestedModels([]);
+    async function decodeVin() {
+        if (formData.vin.length === 17) {
+            try {
+                const res = await fetch('/api/ai/decode-vin', {
+                    method: 'POST',
+                    body: JSON.stringify({ vin: formData.vin })
+                });
+                const data = await res.json();
+                if (data.Make || data.Model) {
+                    setFormData(prev => ({
+                        ...prev,
+                        make: data.Make || prev.make,
+                        model: data.Model || prev.model,
+                        year: data.Year?.toString() || prev.year,
+                        title: `${data.Year || prev.year} ${data.Make || prev.make} ${data.Model || prev.model}`
+                    }));
+                }
+            } catch (e) {
+                console.error("VIN decoding failed", e);
+            }
+        }
     }
-
-    if (formData.make && formData.model && formData.year) {
-        setEstimatedValue(getEstimatedValue(formData.make, formData.model, parseInt(formData.year)));
-    }
-  }, [formData.make, formData.model, formData.year]);
+    decodeVin();
+  }, [formData.vin]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
