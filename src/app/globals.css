@@ -32,36 +32,6 @@
   --chart-5: 27 87% 67%;
 }
 
-/* Brand Theme Overrides */
-[data-brand="ktm"] {
-  --primary: 23 100% 50%; 
-  --ring: 23 100% 50%;
-}
-[data-brand="yamaha"] {
-  --primary: 217 100% 50%;
-  --ring: 217 100% 50%;
-}
-[data-brand="honda"] {
-  --primary: 0 100% 50%;
-  --ring: 0 100% 50%;
-}
-[data-brand="kawasaki"] {
-  --primary: 100 100% 50%;
-  --ring: 100 100% 50%;
-}
-[data-brand="suzuki"] {
-  --primary: 50 100% 50%;
-  --ring: 50 100% 50%;
-}
-[data-brand="husqvarna"] {
-  --primary: 200 100% 30%;
-  --ring: 200 100% 30%;
-}
-[data-brand="gasgas"] {
-  --primary: 0 100% 40%;
-  --ring: 0 100% 40%;
-}
-
 .dark {
   --background: 0 0% 3.9%;
   --foreground: 0 0% 98%;
@@ -69,19 +39,47 @@
   --card-foreground: 0 0% 98%;
   --popover: 0 0% 3.9%;
   --popover-foreground: 0 0% 98%;
-  --primary: 260 90% 57%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 0 0% 14.9%;
+  --primary: 263 90% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 263 30% 10%;
   --secondary-foreground: 0 0% 98%;
-  --muted: 0 0% 14.9%;
-  --muted-foreground: 0 0% 63.9%;
-  --accent: 0 0% 14.9%;
-  --accent-foreground: 0 0% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 0 0% 14.9%;
-  --input: 0 0% 14.9%;
-  --ring: 260 90% 57%;
+  --muted: 263 10% 15%;
+  --muted-foreground: 263 5% 65%;
+  --accent: 263 90% 50% / 0.2;
+  --accent-foreground: 263 90% 50%;
+  --border: 263 10% 20%;
+  --input: 263 10% 20%;
+  --ring: 263 90% 50%;
+}
+
+/* Brand Theme Overrides (Applied to body to override :root and .dark) */
+body[data-brand="ktm"], [data-brand="ktm"] body {
+  --primary: 23 100% 50% !important; 
+  --ring: 23 100% 50% !important;
+}
+body[data-brand="yamaha"], [data-brand="yamaha"] body {
+  --primary: 217 100% 50% !important;
+  --ring: 217 100% 50% !important;
+}
+body[data-brand="honda"], [data-brand="honda"] body {
+  --primary: 0 100% 50% !important;
+  --ring: 0 100% 50% !important;
+}
+body[data-brand="kawasaki"], [data-brand="kawasaki"] body {
+  --primary: 85 100% 50% !important;
+  --ring: 85 100% 50% !important;
+}
+body[data-brand="suzuki"], [data-brand="suzuki"] body {
+  --primary: 50 100% 50% !important;
+  --ring: 50 100% 50% !important;
+}
+body[data-brand="husqvarna"], [data-brand="husqvarna"] body {
+  --primary: 200 100% 30% !important;
+  --ring: 200 100% 30% !important;
+}
+body[data-brand="gasgas"], [data-brand="gasgas"] body {
+  --primary: 0 100% 40% !important;
+  --ring: 0 100% 40% !important;
 }
 
 @theme inline {

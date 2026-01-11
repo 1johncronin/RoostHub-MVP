@@ -14,16 +14,17 @@ export function Logo({ className, iconOnly = false }: { className?: string; icon
       >
         <path 
           d="M10 18 Q50 5 110 2" 
-          stroke="#7C3AED" 
+          stroke="currentColor" 
           strokeWidth="3" 
           strokeLinecap="round" 
-          className="opacity-60"
+          className="opacity-60 text-primary"
         />
         <path 
           d="M25 14 Q60 2 115 6" 
-          stroke="#7C3AED" 
+          stroke="currentColor" 
           strokeWidth="2" 
           strokeLinecap="round"
+          className="text-primary"
         />
       </svg>
 
