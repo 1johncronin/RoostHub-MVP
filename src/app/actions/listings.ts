@@ -83,6 +83,85 @@ export async function createListing(formData: FormData) {
   return { success: true, ...listing };
 }
 
+export async function updateListing(listingId: string, formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) return { error: 'Unauthorized' };
+
+  const title = formData.get('title') as string;
+  const price = parseFloat(formData.get('price') as string);
+  const description = formData.get('description') as string;
+  const type = formData.get('type') as 'machine' | 'part' | 'gear' | 'storage';
+  const location = formData.get('location') as string;
+
+  // 1. Update Listing
+  const { data: listing, error: listingError } = await supabase
+    .from('listings')
+    .update({
+      title,
+      price,
+      description,
+      type,
+      location_name: location,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', listingId)
+    .eq('seller_id', user.id)
+    .select()
+    .single();
+
+  if (listingError) {
+    console.error('Update error:', listingError);
+    return { error: listingError.message };
+  }
+
+  // 2. Update Machine details if applicable
+  if (type === 'machine') {
+    const year = parseInt(formData.get('year') as string);
+    const make = formData.get('make') as string;
+    const model = formData.get('model') as string;
+    const vin = formData.get('vin') as string;
+    const hours = parseFloat(formData.get('hours') as string) || null;
+    const mileage = parseFloat(formData.get('miles') as string) || null;
+
+    await supabase
+      .from('machines')
+      .update({
+        year,
+        make,
+        model,
+        vin,
+        hours,
+        mileage
+      })
+      .eq('listing_id', listingId);
+  }
+
+  revalidatePath('/garage');
+  revalidatePath('/marketplace');
+  revalidatePath(`/listing/${listingId}`);
+  return { success: true, ...listing };
+}
+
+export async function deleteListing(listingId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) throw new Error('Unauthorized');
+
+  const { error } = await supabase
+    .from('listings')
+    .delete()
+    .eq('id', listingId)
+    .eq('seller_id', user.id);
+
+  if (error) throw error;
+
+  revalidatePath('/garage');
+  revalidatePath('/marketplace');
+}
+
 export async function markAsSold(listingId: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();

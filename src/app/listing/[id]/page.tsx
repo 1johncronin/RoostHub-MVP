@@ -6,6 +6,9 @@ import { Metadata, ResolvingMetadata } from 'next';
 import { getOrCreateThread } from '@/app/actions/messages';
 import { cn } from '@/lib/utils';
 
+import { ShareButton } from '@/components/layout/ShareButton';
+import { createClient as createBrowserClient } from '@/lib/supabase/client';
+
 type Props = {
   params: Promise<{ id: string }>;
 };
@@ -71,7 +74,9 @@ function DemoListingDetail({ id }: { id: string }) {
     return <ListingUI listing={listing} isDemo={true} />;
 }
 
-function ListingUI({ listing, isDemo = false }: { listing: any, isDemo?: boolean }) {
+import { ListingActions } from '@/components/listing/ListingActions';
+
+function ListingUI({ listing, currentUserId, isDemo = false }: { listing: any, currentUserId?: string, isDemo?: boolean }) {
     return (
         <div className="container py-8 max-w-7xl animate-in fade-in duration-700">
             {/* Breadcrumbs */}
@@ -188,15 +193,12 @@ function ListingUI({ listing, isDemo = false }: { listing: any, isDemo?: boolean
                             </div>
                         </div>
 
-                        <div className="space-y-3">
-                            <button className="w-full bg-primary text-white py-5 rounded-[24px] font-black uppercase italic text-xl hover:scale-[1.02] transition-all shadow-xl shadow-primary/30 flex items-center justify-center gap-3 active:scale-95">
-                                <MessageSquare className="h-6 w-6 fill-current" />
-                                Message Seller
-                            </button>
-                            <button className="w-full border-2 border-border py-5 rounded-[24px] font-black uppercase italic text-xl hover:bg-accent transition-all active:scale-95">
-                                Make Offer
-                            </button>
-                        </div>
+                        <ListingActions 
+                            listingId={listing.id} 
+                            sellerId={listing.seller_id} 
+                            price={listing.price} 
+                            currentUserId={currentUserId}
+                        />
 
                         {/* Omniscient Stats */}
                         <div className="space-y-4 pt-8 border-t border-border">
@@ -231,9 +233,7 @@ function ListingUI({ listing, isDemo = false }: { listing: any, isDemo?: boolean
                     </div>
                     
                     {/* Share Action */}
-                    <button className="w-full bg-muted/50 border border-border p-4 rounded-2xl flex items-center justify-center gap-2 text-xs font-black uppercase italic hover:bg-muted transition-all">
-                        <Share2 className="h-4 w-4" /> Share This Listing
-                    </button>
+                    <ShareButton title={listing.title} />
                 </div>
             </div>
         </div>
@@ -243,6 +243,7 @@ function ListingUI({ listing, isDemo = false }: { listing: any, isDemo?: boolean
 export default async function ListingDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
   if (id.startsWith('demo-')) {
     return <DemoListingDetail id={id} />;
@@ -264,5 +265,5 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
 
   if (!listing) notFound();
 
-  return <ListingUI listing={listing} />;
+  return <ListingUI listing={listing} currentUserId={user?.id} />;
 }

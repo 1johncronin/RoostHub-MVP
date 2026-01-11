@@ -6,6 +6,8 @@ import { cn } from '@/lib/utils';
 import { getDueServices } from '@/lib/data/maintenance-intelligence';
 import { HistoryButton } from '@/components/garage/HistoryButton';
 import { InviteForm } from '@/components/garage/InviteForm';
+import { ShareButton } from '@/components/layout/ShareButton';
+import { deleteListing } from '@/app/actions/listings';
 
 export default async function GaragePage({
   searchParams,
@@ -28,7 +30,7 @@ export default async function GaragePage({
 
   const { data: listings } = await supabase
     .from('listings')
-    .select('*, machines(*), maintenance_logs(*)')
+    .select('*, machines(*), maintenance_logs(*), listing_media(*)')
     .eq('seller_id', user.id)
     .order('created_at', { ascending: false });
 
@@ -76,9 +78,11 @@ export default async function GaragePage({
             <Link href="/garage/settings" className="p-3 border border-border rounded-xl hover:bg-accent transition-colors">
                 <Settings className="h-5 w-5" />
             </Link>
-            <button className="p-3 border border-border rounded-xl hover:bg-accent transition-colors">
-                <Share2 className="h-5 w-5" />
-            </button>
+            <ShareButton 
+                title={`Check out @${profile?.username}'s Garage on RoostHub`} 
+                variant="outline"
+                className="p-3"
+            />
         </div>
       </div>
 
@@ -94,14 +98,19 @@ export default async function GaragePage({
         <div className="grid grid-cols-1 gap-6">
             {listings?.map((l) => {
                 const dueServices = getDueServices(l.machines?.category || 'Motocross', l.machines?.hours || 0);
+                const mainImage = l.listing_media?.[0]?.url;
                 
                 return (
                     <div key={l.id} className="bg-card border border-border rounded-3xl overflow-hidden group hover:border-primary/50 transition-all hover:shadow-2xl">
                         <div className="flex flex-col md:flex-row">
                             <div className="w-full md:w-1/3 aspect-[4/3] bg-muted relative">
-                                <div className="absolute inset-0 flex items-center justify-center opacity-20">
-                                    <Bike className="h-20 w-20" />
-                                </div>
+                                {mainImage ? (
+                                    <img src={mainImage} alt={l.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                                ) : (
+                                    <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                                        <Bike className="h-20 w-20" />
+                                    </div>
+                                )}
                                 {l.status === 'sold' && (
                                     <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] flex items-center justify-center z-10">
                                         <div className="border-4 border-primary text-primary px-6 py-2 rounded-xl font-black text-3xl uppercase italic font-space-grotesk -rotate-12 shadow-[0_0_30px_rgba(124,58,237,0.5)]">
@@ -140,6 +149,9 @@ export default async function GaragePage({
                                     <Link href={`/listing/${l.id}`} className="px-4 py-2 bg-muted hover:bg-primary hover:text-primary-foreground rounded-lg text-xs font-black uppercase italic transition-all flex items-center gap-2 text-foreground hover:text-white">
                                         View
                                     </Link>
+                                    <Link href={`/listing/${l.id}/edit`} className="px-4 py-2 bg-muted hover:bg-primary hover:text-primary-foreground rounded-lg text-xs font-black uppercase italic transition-all flex items-center gap-2 text-foreground hover:text-white">
+                                        Edit
+                                    </Link>
                                     <button className="px-4 py-2 bg-muted hover:bg-primary hover:text-primary-foreground rounded-lg text-xs font-black uppercase italic transition-all flex items-center gap-2 text-foreground hover:text-white">
                                         <Wrench className="h-3 w-3" /> Log
                                     </button>
@@ -156,6 +168,17 @@ export default async function GaragePage({
                                             </button>
                                         </form>
                                     )}
+
+                                    <form action={async () => {
+                                        'use server';
+                                        await deleteListing(l.id);
+                                    }} onSubmit={(e) => {
+                                        if(!confirm('Are you sure you want to delete this listing?')) e.preventDefault();
+                                    }}>
+                                        <button type="submit" className="px-4 py-2 border border-destructive/20 text-destructive hover:bg-destructive hover:text-white rounded-lg text-xs font-black uppercase italic transition-all">
+                                            Delete
+                                        </button>
+                                    </form>
 
                                     {l.status !== 'sold' && (
                                         <form action={async () => {

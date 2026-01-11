@@ -1,43 +1,44 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createListing } from '@/app/actions/listings'; 
-import { Loader2, Upload, CheckCircle, ChevronRight, ChevronLeft, Info, DollarSign } from 'lucide-react';
+import { createListing, updateListing } from '@/app/actions/listings'; 
+import { Loader2, Upload, CheckCircle, ChevronRight, ChevronLeft, Info, DollarSign, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { createClient } from '@/lib/supabase/client';
 import { MOTORSPORT_MAKES, MACHINE_MODELS, getEstimatedValue } from '@/lib/data/machine-reference';
 
 interface WizardProps {
   userId: string;
+  initialData?: any;
 }
 
 type ListingType = 'machine' | 'part' | 'gear' | 'storage';
 
-export function ListingWizard({ userId }: WizardProps) {
+export function ListingWizard({ userId, initialData }: WizardProps) {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [suggestedModels, setSuggestedModels] = useState<string[]>([]);
   const [estimatedValue, setEstimatedValue] = useState<number | null>(null);
   
   const [formData, setFormData] = useState({
-    type: 'machine' as ListingType,
-    title: '',
-    price: '',
-    description: '',
-    make: '',
-    model: '',
-    year: '2024',
-    location: '',
-    hours: '',
-    miles: '',
-    vin: '',
-    space_type: 'Garage',
-    access_type: '24/7',
+    type: initialData?.type || 'machine' as ListingType,
+    title: initialData?.title || '',
+    price: initialData?.price?.toString() || '',
+    description: initialData?.description || '',
+    make: initialData?.machines?.make || '',
+    model: initialData?.machines?.model || '',
+    year: initialData?.machines?.year?.toString() || '2024',
+    location: initialData?.location_name || '',
+    hours: initialData?.machines?.hours?.toString() || '',
+    miles: initialData?.machines?.mileage?.toString() || '',
+    vin: initialData?.machines?.vin || '',
+    space_type: initialData?.storage_spaces?.space_type || 'Garage',
+    access_type: initialData?.storage_spaces?.access_type || '24/7',
   });
 
   useEffect(() => {
     async function decodeVin() {
-        if (formData.vin.length === 17) {
+        if (formData.vin.length === 17 && !initialData) {
             try {
                 const res = await fetch('/api/ai/decode-vin', {
                     method: 'POST',
@@ -74,7 +75,7 @@ export function ListingWizard({ userId }: WizardProps) {
   const handleBack = () => setStep(prev => prev - 1);
 
   const [files, setFiles] = useState<File[]>([]);
-  const [previews, setPreviews] = useState<string[]>([]);
+  const [previews, setPreviews] = useState<string[]>(initialData?.listing_media?.map((m: any) => m.url) || []);
   const [uploading, setUploading] = useState(false);
   const supabase = createClient();
 
@@ -138,7 +139,12 @@ export function ListingWizard({ userId }: WizardProps) {
         });
         form.append('userId', userId);
         
-        const result = await createListing(form) as any;
+        let result: any;
+        if (initialData?.id) {
+            result = await updateListing(initialData.id, form);
+        } else {
+            result = await createListing(form);
+        }
 
         if (result?.error) {
             alert("Oops! " + result.error);
@@ -148,10 +154,17 @@ export function ListingWizard({ userId }: WizardProps) {
 
         const listingId = result.id;
 
-        // 2. Upload Files if any
+        // 2. Upload Files if any (only if NEW files were selected)
         if (files.length > 0 && listingId) {
             setUploading(true);
             
+            // @ts-ignore
+            const supabaseUrl = supabase.supabaseUrl;
+            console.log('--- UPLOAD DEBUG ---');
+            console.log('Supabase URL:', supabaseUrl);
+            console.log('Target Bucket: listing-media');
+            console.log('Listing ID:', listingId);
+
             for (const file of files) {
                 const path = `${userId}/${listingId}/${Date.now()}-${file.name}`;
                 console.log('Uploading to path:', path);
