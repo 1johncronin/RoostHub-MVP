@@ -32,26 +32,49 @@ export default function DJBoothPage() {
         }
 
         // 1. Upload File
-        const fileName = `${user.id}/${Date.now()}-${selectedFile.name}`;
+        const fileName = `${user.id}/reels/${Date.now()}-${selectedFile.name}`;
         const { error: uploadError } = await supabase.storage
-            .from('dj-raw')
+            .from('listing-media') // Using same bucket for simplicity
             .upload(fileName, selectedFile);
 
         if (uploadError) throw uploadError;
 
-        // 2. Create Render Job
-        const { error: jobError } = await supabase
-            .from('render_jobs')
+        const { data: { publicUrl } } = supabase.storage.from('listing-media').getPublicUrl(fileName);
+
+        // 2. Create Post
+        // Optional: Let user link a listing here. For MVP we'll grab the latest machine.
+        const { data: latestListing } = await supabase
+            .from('listings')
+            .select('id')
+            .eq('seller_id', user.id)
+            .eq('type', 'machine')
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .single();
+
+        const { data: post, error: postError } = await supabase
+            .from('posts')
             .insert({
-                user_id: user.id,
-                template_id: 'hype-reel-15s',
-                input_assets: [fileName],
-                status: 'pending'
-            });
+                author_id: user.id,
+                media_url: publicUrl,
+                post_type: 'dj_reel',
+                linked_listing_id: latestListing?.id || null,
+                caption: "New build highlights from the DJ Booth! 🏁"
+            })
+            .select()
+            .single();
 
-        if (jobError) throw jobError;
+        if (postError) throw postError;
 
-        alert("Clip uploaded! Processing job started.");
+        // 3. Create Render Job (Background)
+        await supabase.from('render_jobs').insert({
+            user_id: user.id,
+            template_id: 'hype-reel',
+            status: 'pending',
+            input_assets: [fileName]
+        });
+
+        window.location.href = `/post/${post.id}`;
     } catch (error: any) {
         console.error(error);
         alert("Error: " + error.message);
