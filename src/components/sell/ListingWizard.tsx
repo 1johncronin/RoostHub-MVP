@@ -74,6 +74,7 @@ export function ListingWizard({ userId }: WizardProps) {
   const handleBack = () => setStep(prev => prev - 1);
 
   const [files, setFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const supabase = createClient();
 
@@ -83,6 +84,10 @@ export function ListingWizard({ userId }: WizardProps) {
     if (e.target.files) {
         const selectedFiles = Array.from(e.target.files);
         setFiles(selectedFiles);
+        
+        // Generate previews
+        const newPreviews = selectedFiles.map(file => URL.createObjectURL(file));
+        setPreviews(newPreviews);
 
         // AI Vision: Analyze the first image if it's a machine
         if (formData.type === 'machine' && selectedFiles[0]?.type.startsWith('image/')) {
@@ -401,10 +406,15 @@ export function ListingWizard({ userId }: WizardProps) {
                 <p className="text-[10px] text-muted-foreground font-bold italic uppercase tracking-tighter">AI will automatically append mods if you upload a photo above.</p>
             </div>
 
-            {files.length > 0 && (
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
-                    {files.map((f, i) => (
-                        <div key={i} className="p-2 bg-muted rounded-lg text-[10px] font-bold truncate uppercase">{f.name}</div>
+            {previews.length > 0 && (
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mt-4">
+                    {previews.map((url, i) => (
+                        <div key={i} className="aspect-square bg-muted rounded-xl overflow-hidden border-2 border-border relative group">
+                            <img src={url} alt="" className="w-full h-full object-cover" />
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span className="text-[8px] font-black text-white uppercase">Photo {i+1}</span>
+                            </div>
+                        </div>
                     ))}
                 </div>
             )}
@@ -416,8 +426,12 @@ export function ListingWizard({ userId }: WizardProps) {
             <h2 className="text-3xl font-black italic uppercase font-space-grotesk text-primary">Final Review</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="aspect-[4/3] bg-muted rounded-2xl flex items-center justify-center italic text-muted-foreground font-bold">
-                    [Preview Thumbnail]
+                <div className="aspect-[4/3] bg-muted rounded-2xl overflow-hidden border-2 border-border flex items-center justify-center">
+                    {previews[0] ? (
+                        <img src={previews[0]} alt="Preview" className="w-full h-full object-cover" />
+                    ) : (
+                        <span className="italic text-muted-foreground font-bold">No Media Provided</span>
+                    )}
                 </div>
                 <div className="space-y-4">
                     <h3 className="text-2xl font-black italic uppercase font-space-grotesk leading-none">{formData.title || 'Untitled Listing'}</h3>
