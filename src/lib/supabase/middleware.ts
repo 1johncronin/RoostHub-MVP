@@ -49,6 +49,7 @@ export async function updateSession(request: NextRequest) {
     path === '/' ||
     path.startsWith('/marketplace') ||
     path.startsWith('/listing') ||
+    path.startsWith('/post') ||
     path.startsWith('/login') ||
     path.startsWith('/auth') ||
     path.startsWith('/auth/update-password') ||

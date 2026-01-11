@@ -78,7 +78,7 @@ export async function createListing(formData: FormData) {
   }
 
   revalidatePath('/marketplace');
-  return { success: true, id: listing.id };
+  return { success: true, ...listing };
 }
 
 export async function markAsSold(listingId: string) {

@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import { Bike, Settings, Plus, Share2, ShieldCheck, Wrench, AlertTriangle, History, CheckCircle } from 'lucide-react';
+import { Bike, Settings, Plus, Share2, ShieldCheck, Wrench, AlertTriangle, History, CheckCircle, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { getDueServices } from '@/lib/data/maintenance-intelligence';
@@ -46,7 +46,8 @@ export default async function GaragePage({
             <p className="text-sm font-black uppercase italic tracking-tight">Checkout canceled. No charges were made.</p>
         </div>
       )}
-      {/* ... previous header logic ... */}
+
+      {/* Profile Header */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12 bg-muted/30 p-8 rounded-3xl border border-border">
         <div className="flex items-center gap-6">
           <div className="h-24 w-24 rounded-full bg-primary/10 border-4 border-background flex items-center justify-center font-black text-4xl text-primary italic font-roboto-condensed">
@@ -118,14 +119,25 @@ export default async function GaragePage({
                                             <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{l.machines?.hours || 0} HOURS</div>
                                         </div>
                                     </div>
-                                    {/* ... rest of alerts ... */}
+
+                                    {/* Alerts */}
+                                    {dueServices.length > 0 && (
+                                        <div className="mt-6 flex flex-wrap gap-2">
+                                            {dueServices.slice(0, 2).map((s: any) => (
+                                                <div key={s.type} className="flex items-center gap-2 px-3 py-1.5 bg-amber-500/10 border border-amber-500/20 rounded-lg text-amber-500">
+                                                    <AlertTriangle className="h-3 w-3" />
+                                                    <span className="text-[10px] font-black uppercase italic tracking-tight">{s.type} DUE</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="flex flex-wrap items-center gap-4 pt-6 border-t border-border/50">
-                                    <Link href={`/listing/${l.id}`} className="px-4 py-2 bg-muted hover:bg-primary hover:text-primary-foreground rounded-lg text-xs font-black uppercase italic transition-all flex items-center gap-2">
+                                    <Link href={`/listing/${l.id}`} className="px-4 py-2 bg-muted hover:bg-primary hover:text-primary-foreground rounded-lg text-xs font-black uppercase italic transition-all flex items-center gap-2 text-foreground hover:text-white">
                                         View
                                     </Link>
-                                    <button className="px-4 py-2 bg-muted hover:bg-primary hover:text-primary-foreground rounded-lg text-xs font-black uppercase italic transition-all flex items-center gap-2">
+                                    <button className="px-4 py-2 bg-muted hover:bg-primary hover:text-primary-foreground rounded-lg text-xs font-black uppercase italic transition-all flex items-center gap-2 text-foreground hover:text-white">
                                         <Wrench className="h-3 w-3" /> Log
                                     </button>
                                     <HistoryButton machine={l.machines} logs={l.maintenance_logs} />
@@ -163,10 +175,40 @@ export default async function GaragePage({
             {listings?.length === 0 && (
                 <div className="md:col-span-2 py-20 flex flex-col items-center justify-center text-center border-2 border-dashed border-border rounded-3xl bg-muted/10">
                     <Bike className="h-12 w-12 text-muted-foreground mb-4 opacity-20" />
-                    <h3 className="font-bold text-xl">Empty Garage</h3>
-                    <p className="text-muted-foreground max-w-xs mt-1">Your garage is where you showcase your current machines and active listings.</p>
+                    <h3 className="font-bold text-xl uppercase italic">Empty Garage</h3>
+                    <p className="text-muted-foreground max-w-xs mt-1 font-medium">Your garage is where you showcase your current machines and active listings.</p>
                 </div>
             )}
+        </div>
+      </div>
+
+      {/* Invite & Earn Section */}
+      <div className="mt-12 bg-primary/5 border-2 border-primary/20 rounded-[40px] p-10 relative overflow-hidden group">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -z-10 group-hover:scale-110 transition-transform duration-700" />
+        <div className="max-w-2xl space-y-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary text-white text-[10px] font-black uppercase italic tracking-widest">
+                <Zap className="h-3 w-3 fill-current" /> Viral Program
+            </div>
+            <h2 className="text-4xl font-black italic uppercase font-space-grotesk tracking-tighter leading-none text-foreground">Invite a friend, <br />get a <span className="text-primary">free boost</span>.</h2>
+            <p className="text-muted-foreground font-medium">Grow the RoostHub community. When your friend joins, we'll drop a free $19 Featured Listing credit in your garage.</p>
+            
+            <form action={async (formData) => {
+                'use server';
+                const email = formData.get('email') as string;
+                const { sendInvite } = await import('@/app/actions/invites');
+                await sendInvite(email);
+            }} className="flex gap-2 max-w-md pt-2">
+                <input 
+                    name="email"
+                    type="email" 
+                    placeholder="rider@example.com" 
+                    required
+                    className="flex-1 bg-background border border-border rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary/50 font-bold italic"
+                />
+                <button type="submit" className="bg-primary text-white px-6 py-3 rounded-2xl font-black uppercase italic text-xs hover:scale-105 transition-all shadow-lg shadow-primary/20">
+                    Send Invite
+                </button>
+            </form>
         </div>
       </div>
     </div>
