@@ -5,6 +5,7 @@ import { Logo } from './Logo';
 import { createClient } from '@/lib/supabase/server';
 import { signout } from '@/app/auth/actions';
 import { ThemeToggle } from './ThemeToggle';
+import { NotificationBell } from './NotificationBell';
 
 export async function Navbar() {
   const supabase = await createClient();
@@ -44,6 +45,8 @@ export async function Navbar() {
         <div className="flex items-center gap-2 md:gap-4">
           <ThemeToggle />
           
+          {user && <NotificationBell />}
+
           <Link href="/marketplace" className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-full transition-colors">
             <Search className="h-5 w-5" />
           </Link>

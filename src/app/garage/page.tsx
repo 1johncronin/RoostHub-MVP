@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import { Bike, Settings, Plus, Share2, ShieldCheck, Wrench, AlertTriangle, History, CheckCircle, Zap, Bot, Star, ArrowRight, MessageSquare } from 'lucide-react';
+import { Bike, Settings, Plus, Share2, ShieldCheck, Wrench, AlertTriangle, History, CheckCircle, Zap, Bot, Star, ArrowRight, MessageSquare, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { getDueServices } from '@/lib/data/maintenance-intelligence';
@@ -139,12 +139,25 @@ export default async function GaragePage({
                                     <div className="flex items-center gap-2 text-primary font-black italic text-sm uppercase">
                                         <History className="h-4 w-4" /> {m.hours} HOURS
                                     </div>
-                                    <Link 
-                                        href={`/garage?chat=${m.id}`}
-                                        className="p-2 bg-primary/10 rounded-xl text-primary hover:bg-primary hover:text-white transition-all shadow-sm"
-                                    >
-                                        <Bot className="h-5 w-5" />
-                                    </Link>
+                                    <div className="flex gap-2">
+                                        <Link 
+                                            href={`/garage?chat=${m.id}`}
+                                            className="p-2 bg-primary/10 rounded-xl text-primary hover:bg-primary hover:text-white transition-all shadow-sm"
+                                        >
+                                            <Bot className="h-5 w-5" />
+                                        </Link>
+                                        <form action={async () => {
+                                            'use server';
+                                            const { removeFromGarage } = await import('@/app/actions/garage');
+                                            await removeFromGarage(m.id);
+                                        }} onSubmit={(e) => {
+                                            if(!confirm('Remove this machine from your fleet?')) e.preventDefault();
+                                        }}>
+                                            <button type="submit" className="p-2 border border-destructive/20 text-destructive hover:bg-destructive hover:text-white rounded-xl transition-all">
+                                                <Trash2 className="h-5 w-5" />
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
