@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { getDueServices } from '@/lib/data/maintenance-intelligence';
 import { HistoryButton } from '@/components/garage/HistoryButton';
+import { InviteForm } from '@/components/garage/InviteForm';
 
 export default async function GaragePage({
   searchParams,
@@ -192,23 +193,7 @@ export default async function GaragePage({
             <h2 className="text-4xl font-black italic uppercase font-space-grotesk tracking-tighter leading-none text-foreground">Invite a friend, <br />get a <span className="text-primary">free boost</span>.</h2>
             <p className="text-muted-foreground font-medium">Grow the RoostHub community. When your friend joins, we'll drop a free $19 Featured Listing credit in your garage.</p>
             
-            <form action={async (formData) => {
-                'use server';
-                const email = formData.get('email') as string;
-                const { sendInvite } = await import('@/app/actions/invites');
-                await sendInvite(email);
-            }} className="flex gap-2 max-w-md pt-2">
-                <input 
-                    name="email"
-                    type="email" 
-                    placeholder="rider@example.com" 
-                    required
-                    className="flex-1 bg-background border border-border rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary/50 font-bold italic"
-                />
-                <button type="submit" className="bg-primary text-white px-6 py-3 rounded-2xl font-black uppercase italic text-xs hover:scale-105 transition-all shadow-lg shadow-primary/20">
-                    Send Invite
-                </button>
-            </form>
+            <InviteForm />
         </div>
       </div>
     </div>

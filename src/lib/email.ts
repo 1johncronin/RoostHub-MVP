@@ -38,13 +38,14 @@ export async function sendEmail({
     });
 
     if (error) {
-      console.error('Error sending email:', error);
+      console.error('Resend Error:', error);
       return { error };
     }
 
+    console.log('Email sent successfully:', data);
     return { data };
   } catch (error) {
-    console.error('Email exception:', error);
+    console.error('Resend Exception:', error);
     return { error };
   }
 }

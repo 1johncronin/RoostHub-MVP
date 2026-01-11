@@ -35,12 +35,13 @@ export async function sendInvite(recipientEmail: string) {
   });
 
     // 3. Send Email via Resend
-    const inviteLink = `https://roosthub.vercel.app/login?invite=${inviteCode?.code || ''}`;
-    await sendEmail({
+  const inviteLink = `https://roosthub.vercel.app/login?invite=${inviteCode?.code || ''}`;
+  
+  const result = await sendEmail({
     to: recipientEmail,
     subject: `You've been invited to RoostHub! 🏁`,
     text: `Your friend has invited you to join the premier motorsports marketplace. \n\nJoin now and get a free listing boost: ${inviteLink}`,
   });
 
-  return { success: true };
+  return result || { success: true };
 }
