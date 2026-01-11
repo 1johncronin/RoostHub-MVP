@@ -51,6 +51,7 @@ export async function updateSession(request: NextRequest) {
     path.startsWith('/listing') ||
     path.startsWith('/login') ||
     path.startsWith('/auth') ||
+    path.startsWith('/auth/update-password') ||
     path.startsWith('/api') ||
     path.includes('.')
 

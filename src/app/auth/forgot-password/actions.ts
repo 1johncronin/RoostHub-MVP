@@ -9,7 +9,7 @@ export async function resetPassword(formData: FormData) {
   const origin = (await headers()).get('origin')
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${origin}/auth/callback?next=/garage/settings`,
+    redirectTo: `${origin}/auth/callback?next=/auth/update-password`,
   })
 
   if (error) {

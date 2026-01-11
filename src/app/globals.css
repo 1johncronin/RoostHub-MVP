@@ -11,19 +11,19 @@
   --card-foreground: 0 0% 3.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 0 0% 3.9%;
-  --primary: 262 83% 58%; /* Vivid Ultraviolet #7C3AED */
+  --primary: 263 90% 50%; /* MUCH stronger Electric Purple */
   --primary-foreground: 0 0% 100%;
-  --secondary: 262 20% 10%;
+  --secondary: 263 30% 10%;
   --secondary-foreground: 0 0% 98%;
-  --muted: 262 10% 96%;
-  --muted-foreground: 262 5% 45%;
-  --accent: 262 80% 50% / 0.1;
-  --accent-foreground: 262 83% 58%;
+  --muted: 263 10% 90%;
+  --muted-foreground: 263 5% 35%;
+  --accent: 263 90% 50% / 0.15;
+  --accent-foreground: 263 90% 50%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
-  --border: 262 10% 90%;
-  --input: 262 10% 90%;
-  --ring: 262 83% 58%;
+  --border: 263 10% 85%;
+  --input: 263 10% 85%;
+  --ring: 263 90% 50%;
   --radius: 0.5rem;
   --chart-1: 12 76% 61%;
   --chart-2: 173 58% 39%;
