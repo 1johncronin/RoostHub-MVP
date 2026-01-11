@@ -164,9 +164,9 @@ export default async function GaragePage({
                     ))}
                     {garageMachines?.length === 0 && (
                         <div className="sm:col-span-2 py-12 border-4 border-dashed border-border rounded-[40px] flex flex-col items-center justify-center text-center opacity-40 hover:opacity-100 transition-opacity">
-                            <Bike className="h-16 w-16 mb-4" />
-                            <p className="font-black italic uppercase text-lg">Empty Fleet</p>
-                            <p className="text-sm font-medium">Add bikes here without creating a listing.</p>
+                            <Zap className="h-16 w-16 mb-4 text-primary" />
+                            <p className="font-black italic uppercase text-lg">Empty Collection</p>
+                            <p className="text-sm font-medium">Add your toys here to track maintenance or consult the AI Mechanic.</p>
                         </div>
                     )}
                 </div>
