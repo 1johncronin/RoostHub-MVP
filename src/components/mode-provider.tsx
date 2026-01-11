@@ -35,36 +35,36 @@ export function ModeProvider({ children, initialBrand = 'roosthub' }: { children
         
         {/* Winter Mode: High-Fidelity Ground Snow Effect */}
         {mode === 'winter' && (
-            <div className="fixed bottom-0 left-0 right-0 pointer-events-none z-[100] select-none h-40">
-                <svg viewBox="0 0 1440 120" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute bottom-0 w-full h-full drop-shadow-[0_-5px_15px_rgba(255,255,255,0.4)]">
+            <div className="fixed bottom-0 left-0 right-0 pointer-events-none z-[100] select-none h-40 opacity-60">
+                <svg viewBox="0 0 1440 120" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute bottom-0 w-full h-full drop-shadow-[0_-5px_15px_rgba(255,255,255,0.2)]">
                     <path 
                         d="M0 120L1440 120V60C1200 40 1000 80 720 60C440 40 240 80 0 60V120Z" 
                         fill="white" 
-                        className="opacity-95"
+                        className="opacity-70"
                     />
                     <path 
                         d="M0 120L1440 120V85C1100 65 900 105 720 85C540 65 300 105 0 85V120Z" 
-                        fill="#f8fafc" 
-                        className="opacity-80"
+                        fill="#f1f5f9" 
+                        className="opacity-40"
                     />
                     {/* Add some sparkly bits */}
-                    <circle cx="200" cy="70" r="2" fill="white" className="animate-pulse" />
-                    <circle cx="600" cy="90" r="1.5" fill="white" className="animate-pulse" />
-                    <circle cx="1100" cy="65" r="2.5" fill="white" className="animate-pulse" />
+                    <circle cx="200" cy="70" r="2" fill="white" className="animate-pulse opacity-50" />
+                    <circle cx="600" cy="90" r="1.5" fill="white" className="animate-pulse opacity-50" />
+                    <circle cx="1100" cy="65" r="2.5" fill="white" className="animate-pulse opacity-50" />
                 </svg>
             </div>
         )}
 
         {/* Dirty Mode: Mud Splatter Overlay */}
         {mode === 'dirty' && (
-            <div className="fixed inset-0 pointer-events-none z-[100] opacity-30 mix-blend-multiply overflow-hidden">
-                {Array.from({ length: 12 }).map((_, i) => (
+            <div className="fixed inset-0 pointer-events-none z-[100] opacity-15 mix-blend-multiply overflow-hidden">
+                {Array.from({ length: 10 }).map((_, i) => (
                     <div 
                         key={i} 
-                        className="absolute bg-[#3e2723] rounded-full blur-2xl"
+                        className="absolute bg-[#2d1b0e] rounded-full blur-3xl"
                         style={{
-                            width: `${Math.random() * 300 + 100}px`,
-                            height: `${Math.random() * 200 + 50}px`,
+                            width: `${Math.random() * 250 + 100}px`,
+                            height: `${Math.random() * 150 + 50}px`,
                             left: `${Math.random() * 110 - 5}%`,
                             top: `${Math.random() * 110 - 5}%`,
                             transform: `rotate(${Math.random() * 360}deg) scale(${Math.random() + 0.5})`,
