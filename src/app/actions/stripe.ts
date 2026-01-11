@@ -35,14 +35,7 @@ export async function createBoostCheckout(listingId: string) {
     payment_method_types: ['card'],
     line_items: [
       {
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: `Boost Listing: ${listing.title}`,
-            description: 'Featured placement in marketplace search results for 7 days.',
-          },
-          unit_amount: 1900, // $19.00
-        },
+        price: 'price_1SoGQg3cohhQ5qhfKnNRTWgd', // RoostHub Listing Boost
         quantity: 1,
       },
     ],
