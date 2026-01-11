@@ -39,6 +39,8 @@ export async function createListing(formData: FormData) {
     const year = parseInt(formData.get('year') as string);
     const make = formData.get('make') as string;
     const model = formData.get('model') as string;
+    const hours = parseFloat(formData.get('hours') as string) || null;
+    const mileage = parseFloat(formData.get('miles') as string) || null;
 
     const { error: machineError } = await supabase
       .from('machines')
@@ -46,7 +48,9 @@ export async function createListing(formData: FormData) {
         listing_id: listing.id,
         year,
         make,
-        model
+        model,
+        hours,
+        mileage
       });
 
     if (machineError) {
