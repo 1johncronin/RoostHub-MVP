@@ -70,9 +70,11 @@ export default async function RootLayout({
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   
+  let profile = null;
   let brand = 'roosthub';
   if (user) {
-    const { data: profile } = await supabase.from('profiles').select('theme_brand').eq('id', user.id).single();
+    const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+    profile = data;
     brand = profile?.theme_brand || 'roosthub';
   }
 
@@ -89,7 +91,7 @@ export default async function RootLayout({
         >
           <ModeProvider initialBrand={brand}>
             <div className="flex min-h-screen flex-col">
-                <Navbar />
+                <Navbar user={user} profile={profile} />
                 <main className="flex-1 pb-20 md:pb-0">
                     {children}
                 </main>

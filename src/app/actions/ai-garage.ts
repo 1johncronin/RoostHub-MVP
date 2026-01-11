@@ -4,7 +4,9 @@ import { createClient } from '@/lib/supabase/server';
 import { Groq } from 'groq-sdk';
 import { BRAND_RETAILERS } from '@/lib/data/machine-reference';
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+function getGroqClient() {
+  return new Groq({ apiKey: process.env.GROQ_API_KEY });
+}
 
 export async function askGarageAI(machineId: string, message: string) {
   const supabase = await createClient();
@@ -32,6 +34,7 @@ export async function askGarageAI(machineId: string, message: string) {
   });
 
   // 3. Prompt Groq
+  const groq = getGroqClient();
   const completion = await groq.chat.completions.create({
     messages: [
       {

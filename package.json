@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "vercel:dev": "./scripts/vercel-switch.sh dev",
+    "vercel:prod": "./scripts/vercel-switch.sh prod",
+    "vercel:status": "./scripts/vercel-switch.sh status",
+    "deploy:dev": "./scripts/vercel-switch.sh dev && vercel",
+    "deploy:prod": "./scripts/vercel-switch.sh prod && vercel --prod"
   },
   "dependencies": {
     "@stripe/stripe-js": "^8.6.1",

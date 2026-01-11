@@ -27,7 +27,7 @@ export function ListingWizard({ userId, initialData }: WizardProps) {
     description: initialData?.description || '',
     make: initialData?.machines?.make || '',
     model: initialData?.machines?.model || '',
-    year: initialData?.machines?.year?.toString() || '2024',
+    year: initialData?.machines?.year?.toString() || '2025',
     location: initialData?.location_name || '',
     postal_code: initialData?.postal_code || '',
     hours: initialData?.machines?.hours?.toString() || '',
@@ -36,6 +36,16 @@ export function ListingWizard({ userId, initialData }: WizardProps) {
     space_type: initialData?.storage_spaces?.space_type || 'Garage',
     access_type: initialData?.storage_spaces?.access_type || '24/7',
   });
+
+  const [availableModels, setAvailableModels] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (formData.make && MACHINE_MODELS[formData.make]) {
+      setAvailableModels(MACHINE_MODELS[formData.make]);
+    } else {
+      setAvailableModels([]);
+    }
+  }, [formData.make]);
 
   useEffect(() => {
     async function decodeVin() {
@@ -335,17 +345,39 @@ export function ListingWizard({ userId, initialData }: WizardProps) {
 
                             <div className="relative">
                                 <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Model</label>
-                                <input name="model" value={formData.model} onChange={handleChange} autoComplete="off" className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="e.g. 300 XC-W" />
-                                {suggestedModels.length > 0 && !formData.model.includes(suggestedModels[0]) && (
-                                    <div className="absolute z-50 top-full left-0 w-full mt-2 bg-popover border border-border rounded-xl shadow-2xl p-2 max-h-48 overflow-y-auto overflow-x-hidden backdrop-blur-md">
-                                        {suggestedModels.filter(m => m.toLowerCase().includes(formData.model.toLowerCase())).map(m => (
-                                            <button key={m} onClick={() => selectSuggestion(m)} className="w-full text-left px-4 py-2 hover:bg-primary hover:text-primary-foreground rounded-lg text-sm font-bold transition-colors truncate">
-                                                {m}
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
+                                <select 
+                                    name="model" 
+                                    value={availableModels.includes(formData.model) ? formData.model : (formData.model ? 'Other' : '')} 
+                                    onChange={(e) => {
+                                        if (e.target.value === 'Other') {
+                                            setFormData(prev => ({ ...prev, model: 'Custom Machine' }));
+                                        } else {
+                                            handleChange(e);
+                                        }
+                                    }} 
+                                    disabled={!formData.make}
+                                    className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold disabled:opacity-50"
+                                >
+                                    <option value="">{formData.make ? 'Select Model' : 'Choose Brand First'}</option>
+                                    {availableModels.map(m => (
+                                        <option key={m} value={m}>{m}</option>
+                                    ))}
+                                    <option value="Other">Other / Custom</option>
+                                </select>
                             </div>
+
+                            {(!availableModels.includes(formData.model) && formData.model !== '') && (
+                                <div className="animate-in fade-in slide-in-from-top-2">
+                                    <label className="block text-xs font-black uppercase tracking-widest text-primary mb-2">Custom Model Name</label>
+                                    <input 
+                                        name="model" 
+                                        value={formData.model} 
+                                        onChange={handleChange} 
+                                        className="w-full p-3 rounded-xl bg-primary/5 border-2 border-primary/20 focus:border-primary outline-none font-bold italic" 
+                                        placeholder="e.g. Custom Build" 
+                                    />
+                                </div>
+                            )}
 
                             <div>
                                 <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">VIN / Serial</label>

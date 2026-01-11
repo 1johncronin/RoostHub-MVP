@@ -1,10 +1,13 @@
 import Groq from 'groq-sdk';
 
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
-});
+function getGroqClient() {
+  return new Groq({
+    apiKey: process.env.GROQ_API_KEY,
+  });
+}
 
 export async function analyzeMachineText(text: string) {
+  const groq = getGroqClient();
   const chatCompletion = await groq.chat.completions.create({
     messages: [
       {
@@ -24,6 +27,7 @@ export async function analyzeMachineText(text: string) {
 }
 
 export async function analyzeMachineImage(base64Image: string) {
+  const groq = getGroqClient();
   const chatCompletion = await groq.chat.completions.create({
     messages: [
       {

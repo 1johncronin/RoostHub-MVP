@@ -3,11 +3,14 @@
 import { useState } from 'react';
 import { addGarageDream } from '@/app/actions/dreams';
 import { Plus, X, Star, Loader2 } from 'lucide-react';
-import { MOTORSPORT_MAKES } from '@/lib/data/machine-reference';
+import { MOTORSPORT_MAKES, MACHINE_MODELS } from '@/lib/data/machine-reference';
 
 export function AddDreamModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [selectedMake, setSelectedMake] = useState('');
+
+  const availableModels = MACHINE_MODELS[selectedMake] || [];
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -52,14 +55,28 @@ export function AddDreamModal() {
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                     <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Make</label>
-                    <select name="make" required className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold">
+                    <select 
+                        name="make" 
+                        required 
+                        value={selectedMake}
+                        onChange={(e) => setSelectedMake(e.target.value)}
+                        className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold"
+                    >
                         <option value="">Any Make</option>
                         {MOTORSPORT_MAKES.map(m => <option key={m.name} value={m.name}>{m.name}</option>)}
                     </select>
                 </div>
                 <div className="space-y-2">
                     <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Model</label>
-                    <input name="model" placeholder="e.g. 300 XC-W" className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold italic" />
+                    <select 
+                        name="model" 
+                        disabled={!selectedMake}
+                        className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold italic disabled:opacity-50"
+                    >
+                        <option value="">{selectedMake ? 'Any Model' : 'Choose Make'}</option>
+                        {availableModels.map(m => <option key={m} value={m}>{m}</option>)}
+                        <option value="Other">Other / Custom</option>
+                    </select>
                 </div>
             </div>
 

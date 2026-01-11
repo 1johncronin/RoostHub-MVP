@@ -5,27 +5,40 @@ import { addToGarage } from '@/app/actions/garage';
 import { Loader2, Upload, CheckCircle, ChevronRight, ChevronLeft, Info, Bike, Wrench } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { createClient } from '@/lib/supabase/client';
-import { MOTORSPORT_MAKES } from '@/lib/data/machine-reference';
+import { MOTORSPORT_MAKES, MACHINE_MODELS } from '@/lib/data/machine-reference';
 
 interface WizardProps {
   userId: string;
 }
 
 export function CollectionWizard({ userId }: WizardProps) {
+  const supabase = createClient();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [avatar, setAvatar] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     make: '',
     model: '',
-    year: '2024',
+    year: '2025',
     category: 'Motocross',
     hours: '0',
     vin: '',
   });
 
-  const [avatar, setAvatar] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
-  const supabase = createClient();
+  const [availableModels, setAvailableModels] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (formData.make && MACHINE_MODELS[formData.make]) {
+      setAvailableModels(MACHINE_MODELS[formData.make]);
+      // Reset model if it's not in the new list
+      if (!MACHINE_MODELS[formData.make].includes(formData.model)) {
+        setFormData(prev => ({ ...prev, model: '' }));
+      }
+    } else {
+      setAvailableModels([]);
+    }
+  }, [formData.make]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -99,8 +112,38 @@ export function CollectionWizard({ userId }: WizardProps) {
                     </div>
                     <div>
                         <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Model</label>
-                        <input name="model" value={formData.model} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="e.g. CRF450R" />
+                        <select 
+                            name="model" 
+                            value={availableModels.includes(formData.model) ? formData.model : (formData.model ? 'Other' : '')} 
+                            onChange={(e) => {
+                                if (e.target.value === 'Other') {
+                                    setFormData(prev => ({ ...prev, model: 'Custom Machine' }));
+                                } else {
+                                    handleChange(e);
+                                }
+                            }} 
+                            disabled={!formData.make}
+                            className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold disabled:opacity-50"
+                        >
+                            <option value="">{formData.make ? 'Select Model' : 'Choose Brand First'}</option>
+                            {availableModels.map(m => (
+                                <option key={m} value={m}>{m}</option>
+                            ))}
+                            <option value="Other">Other / Custom</option>
+                        </select>
                     </div>
+                    {(!availableModels.includes(formData.model) && formData.model !== '') && (
+                        <div className="md:col-span-2 animate-in fade-in slide-in-from-top-2">
+                            <label className="block text-xs font-black uppercase tracking-widest text-primary mb-2">Custom Model Name</label>
+                            <input 
+                                name="model" 
+                                value={formData.model} 
+                                onChange={handleChange} 
+                                className="w-full p-3 rounded-xl bg-primary/5 border-2 border-primary/20 focus:border-primary outline-none font-bold italic" 
+                                placeholder="e.g. 1974 Custom Chopper" 
+                            />
+                        </div>
+                    )}
                 </div>
                 <div className="space-y-4">
                     <div>

@@ -1,35 +1,20 @@
+'use client';
+
 import Link from 'next/link';
-import { Menu, Search, User, LogOut } from 'lucide-react';
+import { Search, User, LogOut, Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from './Logo';
-import { createClient } from '@/lib/supabase/server';
 import { signout } from '@/app/auth/actions';
 import { ThemeToggle } from './ThemeToggle';
 import { NotificationBell } from './NotificationBell';
+import { useState } from 'react';
 
-export async function Navbar() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  let profile = null;
-  if (user) {
-    const { data } = await supabase
-      .from('profiles')
-      .select('avatar_url, username')
-      .eq('id', user.id)
-      .single();
-    profile = data;
-  }
-
+export function Navbar({ user, profile }: { user: any, profile: any }) {
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
-        {/* Left: Mobile Menu & Logo */}
+        {/* Left: Logo */}
         <div className="flex items-center gap-4">
-          <button className="md:hidden p-2 -ml-2 text-muted-foreground hover:text-foreground">
-            <Menu className="h-6 w-6" />
-          </button>
-          
           <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
             <Logo />
           </Link>
@@ -57,7 +42,7 @@ export async function Navbar() {
           
           {user && <NotificationBell />}
 
-          <Link href="/marketplace" className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-full transition-colors">
+          <Link href="/marketplace" className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-full transition-colors hidden sm:flex">
             <Search className="h-5 w-5" />
           </Link>
           
@@ -71,7 +56,7 @@ export async function Navbar() {
                     )}
                 </Link>
                 <form action={signout}>
-                    <button type="submit" className="p-2 text-muted-foreground hover:text-destructive transition-colors">
+                    <button type="submit" className="p-2 text-muted-foreground hover:text-destructive transition-colors hidden sm:block">
                         <LogOut className="h-5 w-5" />
                     </button>
                 </form>

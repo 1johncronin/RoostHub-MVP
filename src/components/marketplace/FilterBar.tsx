@@ -18,12 +18,23 @@ const SORT_OPTIONS = [
   { label: 'Newest', value: 'newest' },
   { label: 'Price: Low to High', value: 'price_low' },
   { label: 'Price: High to Low', value: 'price_high' },
+  { label: 'Nearest', value: 'nearest' },
+];
+
+const RADIUS_OPTIONS = [
+  { label: '50 Miles', value: '50' },
+  { label: '100 Miles', value: '100' },
+  { label: '250 Miles', value: '250' },
+  { label: '500 Miles', value: '500' },
+  { label: 'Nationwide', value: 'all' },
 ];
 
 export function FilterBar({ currentType }: { currentType?: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(searchParams.get('q') || '');
+  const [zip, setZip] = useState(searchParams.get('zip') || '');
+  const [radius, setRadius] = useState(searchParams.get('radius') || 'all');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const supabase = createClient();
@@ -52,16 +63,15 @@ export function FilterBar({ currentType }: { currentType?: string }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       const params = new URLSearchParams(searchParams.toString());
-      if (search) {
-        params.set('q', search);
-      } else {
-        params.delete('q');
-      }
+      if (search) params.set('q', search); else params.delete('q');
+      if (zip) params.set('zip', zip); else params.delete('zip');
+      if (radius !== 'all') params.set('radius', radius); else params.delete('radius');
+      
       router.push(`/marketplace?${params.toString()}`);
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [search, router, searchParams]);
+  }, [search, zip, radius, router, searchParams]);
 
   function handleFilter(type?: string) {
     const params = new URLSearchParams(searchParams.toString());

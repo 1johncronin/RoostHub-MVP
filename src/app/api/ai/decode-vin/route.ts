@@ -1,12 +1,11 @@
 import Groq from 'groq-sdk';
 import { NextResponse } from 'next/server';
 
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
-});
-
 export async function POST(request: Request) {
   try {
+    const groq = new Groq({
+      apiKey: process.env.GROQ_API_KEY,
+    });
     const { vin } = await request.json();
     if (!vin) return NextResponse.json({ error: 'VIN required' }, { status: 400 });
 
