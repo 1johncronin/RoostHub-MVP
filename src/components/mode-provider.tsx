@@ -7,16 +7,23 @@ type VisualMode = 'normal' | 'winter' | 'dirty';
 interface ModeContextType {
   mode: VisualMode;
   setMode: (mode: VisualMode) => void;
+  brand: string;
+  setBrand: (brand: string) => void;
 }
 
 const ModeContext = createContext<ModeContextType | undefined>(undefined);
 
-export function ModeProvider({ children }: { children: React.ReactNode }) {
+export function ModeProvider({ children, initialBrand = 'roosthub' }: { children: React.ReactNode, initialBrand?: string }) {
   const [mode, setMode] = useState<VisualMode>('normal');
+  const [brand, setBrand] = useState(initialBrand);
+
+  useEffect(() => {
+    document.body.setAttribute('data-brand', brand);
+  }, [brand]);
 
   return (
-    <ModeContext.Provider value={{ mode, setMode }}>
-      <div className="relative min-h-screen">
+    <ModeContext.Provider value={{ mode, setMode, brand, setBrand }}>
+      <div className="relative min-h-screen font-sans">
         {children}
         
         {/* Winter Mode: Ground Snow Effect */}

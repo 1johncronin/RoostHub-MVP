@@ -52,7 +52,7 @@ export default async function MarketplacePage({
       type: 'machine',
       is_featured: true,
       machines: { year: 2024, make: 'KTM', model: '300 XC-W' },
-      listing_media: [{ url: 'https://images.unsplash.com/photo-1558981806-ec527fa84c3d?auto=format&fit=crop&w=800&q=80' }]
+      listing_media: [{ url: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=800&q=80' }]
     },
     {
       id: 'demo-2',

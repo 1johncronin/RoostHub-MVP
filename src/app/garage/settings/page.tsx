@@ -8,7 +8,7 @@ import { useVisualMode } from '@/components/mode-provider';
 
 export default function SettingsPage() {
   const supabase = createClient();
-  const { mode, setMode } = useVisualMode();
+  const { mode, setMode, brand, setBrand } = useVisualMode();
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [verifyingPhone, setVerifyingPhone] = useState(false);
@@ -44,8 +44,8 @@ export default function SettingsPage() {
   async function handleSetBrand(brandId: string) {
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
+        setBrand(brandId);
         await supabase.from('profiles').update({ theme_brand: brandId }).eq('id', user.id);
-        document.body.setAttribute('data-brand', brandId);
         setProfile((prev: any) => ({ ...prev, theme_brand: brandId }));
     }
   }
@@ -160,7 +160,6 @@ export default function SettingsPage() {
         <h2 className="text-2xl font-black italic uppercase font-space-grotesk text-primary tracking-tight mt-12">Trust & Verification</h2>
         
         <div className="space-y-6">
-            {/* Email Verification Card */}
             <div className="bg-card border border-border p-6 rounded-xl flex items-center justify-between shadow-lg">
             <div className="flex items-center gap-4">
                 <div className="p-3 bg-muted rounded-full">
@@ -168,7 +167,7 @@ export default function SettingsPage() {
                 </div>
                 <div>
                 <h3 className="font-bold">Email Verification</h3>
-                <p className="text-sm text-muted-foreground">Required to list items and message sellers.</p>
+                <p className="text-sm text-muted-foreground font-medium uppercase tracking-tight">Required to list items and message sellers.</p>
                 </div>
             </div>
             {profile?.email_verified_at ? (
@@ -184,7 +183,6 @@ export default function SettingsPage() {
             )}
             </div>
 
-            {/* Phone Verification Card */}
             <div className="bg-card border border-border p-6 rounded-xl space-y-4 shadow-lg">
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -193,7 +191,7 @@ export default function SettingsPage() {
                 </div>
                 <div>
                     <h3 className="font-bold">Phone Verification</h3>
-                    <p className="text-sm text-muted-foreground">Verification via SMS OTP.</p>
+                    <p className="text-sm text-muted-foreground font-medium uppercase tracking-tight">Verification via SMS OTP.</p>
                 </div>
                 </div>
                 {profile?.phone_verified_at ? (
@@ -202,7 +200,7 @@ export default function SettingsPage() {
                     <span>VERIFIED</span>
                 </div>
                 ) : (
-                <div className="text-destructive font-bold text-sm uppercase">Not Verified</div>
+                <div className="text-destructive font-bold text-sm uppercase italic">Not Verified</div>
                 )}
             </div>
 
@@ -247,15 +245,14 @@ export default function SettingsPage() {
             )}
             </div>
 
-            {/* Global Verification Status */}
             <div className={cn(
                 "p-8 rounded-[32px] border-2 flex flex-col items-center text-center gap-4 transition-all shadow-2xl",
                 profile?.verification_level === 'verified' ? "border-primary bg-primary/5" : "border-dashed border-border bg-muted/20"
             )}>
-                <ShieldCheck className={cn("h-16 w-16 transition-all", profile?.verification_level === 'verified' ? "text-primary animate-bounce-slow" : "text-muted-foreground opacity-30")} />
+                <ShieldCheck className={cn("h-16 w-16 transition-all", profile?.verification_level === 'verified' ? "text-primary" : "text-muted-foreground opacity-30")} />
                 <div>
                     <h3 className="text-2xl font-black italic uppercase font-space-grotesk tracking-tight">Status: <span className="text-primary">{profile?.verification_level || 'BASIC'}</span></h3>
-                    <p className="text-sm text-muted-foreground mt-2 max-w-sm font-medium leading-relaxed">
+                    <p className="text-sm text-muted-foreground mt-2 max-w-sm font-medium leading-relaxed uppercase tracking-tight">
                         {profile?.verification_level === 'verified' 
                             ? "Omniscient Status Active. You have full access to marketplace publishing, real-time messaging, and priority featured listing credits."
                             : "Unlock the full RoostHub experience. Verify your email and phone to start selling and chatting with the community."}
