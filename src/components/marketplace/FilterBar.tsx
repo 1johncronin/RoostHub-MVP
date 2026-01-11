@@ -2,8 +2,9 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Search } from 'lucide-react';
+import { Search, Bell, Check } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/supabase/client';
 
 const FILTERS = [
   { label: 'All', value: undefined },
@@ -23,6 +24,29 @@ export function FilterBar({ currentType }: { currentType?: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(searchParams.get('q') || '');
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const supabase = createClient();
+
+  const handleSaveSearch = async () => {
+    setSaving(true);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+        alert("Please login to save searches");
+        setSaving(false);
+        return;
+    }
+
+    await supabase.from('saved_searches').insert({
+        user_id: user.id,
+        search_query: search,
+        filter_type: currentType,
+    });
+
+    setSaved(true);
+    setSaving(false);
+    setTimeout(() => setSaved(false), 2000);
+  };
 
   // Debounce search update
   useEffect(() => {
@@ -72,6 +96,21 @@ export function FilterBar({ currentType }: { currentType?: string }) {
             {filter.label}
           </button>
         ))}
+
+        {/* Save Search Button */}
+        {(search || currentType) && (
+            <button 
+                onClick={handleSaveSearch}
+                disabled={saving}
+                className={cn(
+                    "flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-black uppercase italic transition-all border shrink-0",
+                    saved ? "bg-green-500 border-green-500 text-white" : "border-primary/30 text-primary hover:bg-primary/5"
+                )}
+            >
+                {saved ? <Check className="h-3 w-3" /> : <Bell className={cn("h-3 w-3", saving && "animate-bounce")} />}
+                {saved ? "Saved!" : "Alert Me"}
+            </button>
+        )}
       </div>
 
       <div className="flex flex-col sm:flex-row gap-2">

@@ -39,6 +39,7 @@ export async function createListing(formData: FormData) {
     const year = parseInt(formData.get('year') as string);
     const make = formData.get('make') as string;
     const model = formData.get('model') as string;
+    const vin = formData.get('vin') as string;
     const hours = parseFloat(formData.get('hours') as string) || null;
     const mileage = parseFloat(formData.get('miles') as string) || null;
 
@@ -49,6 +50,7 @@ export async function createListing(formData: FormData) {
         year,
         make,
         model,
+        vin,
         hours,
         mileage
       });

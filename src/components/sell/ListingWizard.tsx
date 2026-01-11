@@ -30,6 +30,7 @@ export function ListingWizard({ userId }: WizardProps) {
     location: '',
     hours: '',
     miles: '',
+    vin: '',
     space_type: 'Garage',
     access_type: '24/7',
   });
@@ -197,21 +198,49 @@ export function ListingWizard({ userId }: WizardProps) {
                             </select>
                         </div>
 
-                        <div className="relative">
-                            <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Model</label>
-                            <input name="model" value={formData.model} onChange={handleChange} autoComplete="off" className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="e.g. 300 XC-W" />
-                            
-                            {suggestedModels.length > 0 && !formData.model.includes(suggestedModels[0]) && (
-                                <div className="absolute z-50 top-full left-0 w-full mt-2 bg-popover border border-border rounded-xl shadow-2xl p-2 max-h-48 overflow-y-auto overflow-x-hidden backdrop-blur-md">
-                                    {suggestedModels.filter(m => m.toLowerCase().includes(formData.model.toLowerCase())).map(m => (
-                                        <button key={m} onClick={() => selectSuggestion(m)} className="w-full text-left px-4 py-2 hover:bg-primary hover:text-primary-foreground rounded-lg text-sm font-bold transition-colors truncate">
-                                            {m}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </div>
+                                            <div className="relative">
+
+                                                <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">Model</label>
+
+                                                <input name="model" value={formData.model} onChange={handleChange} autoComplete="off" className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-bold" placeholder="e.g. 300 XC-W" />
+
+                                                
+
+                                                {suggestedModels.length > 0 && !formData.model.includes(suggestedModels[0]) && (
+
+                                                    <div className="absolute z-50 top-full left-0 w-full mt-2 bg-popover border border-border rounded-xl shadow-2xl p-2 max-h-48 overflow-y-auto overflow-x-hidden backdrop-blur-md">
+
+                                                        {suggestedModels.filter(m => m.toLowerCase().includes(formData.model.toLowerCase())).map(m => (
+
+                                                            <button key={m} onClick={() => selectSuggestion(m)} className="w-full text-left px-4 py-2 hover:bg-primary hover:text-primary-foreground rounded-lg text-sm font-bold transition-colors truncate">
+
+                                                                {m}
+
+                                                            </button>
+
+                                                        ))}
+
+                                                    </div>
+
+                                                )}
+
+                                            </div>
+
+                        
+
+                                            <div>
+
+                                                <label className="block text-xs font-black uppercase tracking-widest text-muted-foreground mb-2">VIN / Serial</label>
+
+                                                <input name="vin" value={formData.vin} onChange={handleChange} className="w-full p-3 rounded-xl bg-muted/50 border border-border focus:ring-2 focus:ring-primary/50 outline-none font-mono uppercase font-bold" placeholder="17-DIGIT VIN" maxLength={17} />
+
+                                                <p className="text-[9px] text-muted-foreground mt-1 font-bold uppercase tracking-tighter italic">Required for secure verification and history.</p>
+
+                                            </div>
+
+                                        </div>
+
+                        
                 )}
 
                 <div className="space-y-4">
