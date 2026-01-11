@@ -8,14 +8,14 @@
 ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
 Failed to compile.
 
-./src/components/marketplace/FilterBar.tsx:119:18
-Type error: Cannot find name 'MapPin'.
+./src/components/marketplace/FilterBar.tsx:123:28
+Type error: Cannot find name 'zip'.
 
-[0m [90m 117 |[39m         [33m<[39m[33mdiv[39m className[33m=[39m[32m"flex gap-2"[39m[33m>[39m
- [90m 118 |[39m             [33m<[39m[33mdiv[39m className[33m=[39m[32m"relative w-28 shrink-0"[39m[33m>[39m
-[31m[1m>[22m[39m[90m 119 |[39m                 [33m<[39m[33mMapPin[39m className[33m=[39m[32m"absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"[39m [33m/[39m[33m>[39m
- [90m     |[39m                  [31m[1m^[22m[39m
- [90m 120 |[39m                 [33m<[39m[33minput[39m
- [90m 121 |[39m                     type[33m=[39m[32m"text"[39m
- [90m 122 |[39m                     placeholder[33m=[39m[32m"Zip"[39m[0m
+[0m [90m 121 |[39m                     type[33m=[39m[32m"text"[39m
+ [90m 122 |[39m                     placeholder[33m=[39m[32m"Zip"[39m
+[31m[1m>[22m[39m[90m 123 |[39m                     value[33m=[39m{zip}
+ [90m     |[39m                            [31m[1m^[22m[39m
+ [90m 124 |[39m                     onChange[33m=[39m{(e) [33m=>[39m setZip(e[33m.[39mtarget[33m.[39mvalue)}
+ [90m 125 |[39m                     maxLength[33m=[39m{[35m5[39m}
+ [90m 126 |[39m                     className[33m=[39m[32m"w-full pl-9 pr-2 py-2 rounded-xl bg-muted/50 border border-border focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all text-sm font-bold"[39m[0m
 Next.js build worker exited with code: 1 and signal: null
