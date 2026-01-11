@@ -41,18 +41,50 @@ export const viewport = {
   themeColor: "#6B2CF5",
 };
 
+import { ThemeProvider } from "@/components/theme-provider";
+
+
+
 export default function RootLayout({
+
   children,
+
 }: Readonly<{
+
   children: React.ReactNode;
+
 }>) {
+
   return (
-    <html lang="en">
+
+    <html lang="en" suppressHydrationWarning>
+
       <body
+
         className={`${geistSans.variable} ${geistMono.variable} ${robotoCondensed.variable} ${teko.variable} ${spaceGrotesk.variable} antialiased bg-background text-foreground`}
+
       >
-        {children}
+
+        <ThemeProvider
+
+          attribute="class"
+
+          defaultTheme="system"
+
+          enableSystem
+
+          disableTransitionOnChange
+
+        >
+
+          {children}
+
+        </ThemeProvider>
+
       </body>
+
     </html>
+
   );
+
 }

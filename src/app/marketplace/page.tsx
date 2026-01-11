@@ -5,12 +5,13 @@ import { FilterBar } from '@/components/marketplace/FilterBar';
 export default async function MarketplacePage({
   searchParams,
 }: {
-  searchParams: Promise<{ type?: string; q?: string }>;
+  searchParams: Promise<{ type?: string; q?: string; sort?: string }>;
 }) {
   const supabase = await createClient();
   const params = await searchParams;
   const type = params.type;
   const query = params.q;
+  const sort = params.sort || 'newest';
 
   let dbQuery = supabase
     .from('listings')
@@ -19,15 +20,24 @@ export default async function MarketplacePage({
       machines(year, make, model),
       listing_media(url, sort_order)
     `)
-    .eq('status', 'active')
-    .order('created_at', { ascending: false });
+    .eq('status', 'active');
 
   if (type) {
     dbQuery = dbQuery.eq('type', type);
   }
   
   if (query) {
-    dbQuery = dbQuery.ilike('title', `%${query}%`);
+    // Search in title and description
+    dbQuery = dbQuery.or(`title.ilike.%${query}%,description.ilike.%${query}%`);
+  }
+
+  // Sorting logic
+  if (sort === 'newest') {
+    dbQuery = dbQuery.order('created_at', { ascending: false });
+  } else if (sort === 'price_low') {
+    dbQuery = dbQuery.order('price', { ascending: true });
+  } else if (sort === 'price_high') {
+    dbQuery = dbQuery.order('price', { ascending: false });
   }
 
   const { data: listings } = await dbQuery;
