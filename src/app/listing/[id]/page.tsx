@@ -156,11 +156,55 @@ function ShieldCheck({ className }: { className?: string }) {
 }
 
 function DemoListingDetail({ id }: { id: string }) {
+    const demoData: Record<string, any> = {
+        'demo-1': {
+            title: '2024 KTM 300 XC-W',
+            price: 9800,
+            currency: 'USD',
+            location_name: 'Hood River, OR',
+            type: 'machine',
+            machines: { year: 2024, make: 'KTM', model: '300 XC-W', hours: 12, condition: 'excellent' },
+            listing_media: [{ url: 'https://images.unsplash.com/photo-1558981806-ec527fa84c3d?auto=format&fit=crop&w=1200&q=80' }],
+            profiles: { username: 'ktm_rider', verification_level: 'verified' },
+            description: 'Absolutely mint 2024 KTM 300 XC-W. Fuel injected, only 12 hours. Ready to roost. Comes with FMF Gnarly pipe and carbon guard.'
+        },
+        'demo-2': {
+            title: 'Secure Shop Space',
+            price: 150,
+            currency: 'USD',
+            location_name: 'Bend, OR',
+            type: 'storage',
+            listing_media: [{ url: 'https://images.unsplash.com/photo-1595079676339-1534801ad6cf?auto=format&fit=crop&w=1200&q=80' }],
+            profiles: { username: 'shop_master', verification_level: 'verified' },
+            description: 'Heated shop space available for rent. Secure, 24/7 access. Perfect for storing bikes or working on builds.'
+        }
+    };
+
+    const listing = demoData[id] || demoData['demo-1'];
+
     return (
-        <div className="container py-20 text-center">
-            <h1 className="text-2xl font-bold italic mb-4 uppercase font-roboto-condensed">DEMO CONTENT</h1>
-            <p className="text-muted-foreground max-w-sm mx-auto">This is a placeholder for demo item <span className="font-mono text-primary">{id}</span>. Create a real listing via the Sell Wizard to see the full detail view.</p>
-            <Link href="/marketplace" className="mt-8 inline-block text-primary underline">Back to Marketplace</Link>
+        <div className="container py-8 max-w-6xl">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 text-foreground">
+                <div className="lg:col-span-2 space-y-8">
+                    <div className="aspect-video bg-muted rounded-3xl overflow-hidden border border-border shadow-2xl">
+                        <img src={listing.listing_media[0].url} alt="" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="space-y-4">
+                        <h1 className="text-5xl font-black italic uppercase font-space-grotesk text-primary tracking-tighter">{listing.title}</h1>
+                        <div className="flex flex-wrap gap-4 text-[10px] font-black uppercase italic tracking-widest text-muted-foreground">
+                            <div className="flex items-center gap-1 bg-muted px-3 py-1 rounded-lg"><MapPin className="h-3 w-3 text-primary" /> {listing.location_name}</div>
+                            <div className="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1 rounded-lg">{listing.type}</div>
+                        </div>
+                        <p className="text-xl text-muted-foreground leading-relaxed pt-6 border-t border-border/50">{listing.description}</p>
+                    </div>
+                </div>
+                <div className="space-y-6">
+                    <div className="bg-card border border-border p-8 rounded-3xl shadow-2xl sticky top-24">
+                        <div className="text-5xl font-black italic text-primary mb-8 font-space-grotesk">${listing.price.toLocaleString()}</div>
+                        <Link href="/login" className="block w-full bg-primary text-white py-4 rounded-2xl font-black uppercase italic text-center hover:scale-[1.02] transition-all shadow-lg shadow-primary/20">Message Seller</Link>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

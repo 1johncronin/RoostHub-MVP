@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Roboto_Condensed, Teko, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import { createClient } from "@/lib/supabase/server";
+import { MobileNav } from "@/components/layout/MobileNav";
+import { Navbar } from "@/components/layout/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,144 +45,41 @@ export const viewport = {
   themeColor: "#6B2CF5",
 };
 
-import { ThemeProvider } from "@/components/theme-provider";
-
-import { Plus } from "lucide-react";
-
-import { createClient } from "@/lib/supabase/server";
-
-import Link from "next/link";
-
-
-
 export default async function RootLayout({
-
-
-
-
-
-
-
-
-
   children,
-
-
-
 }: Readonly<{
-
-
-
   children: React.ReactNode;
-
-
-
 }>) {
-
-
-
   const supabase = await createClient();
-
-
-
   const { data: { user } } = await supabase.auth.getUser();
-
-
-
   
-
-
-
   let brand = 'roosthub';
-
-
-
   if (user) {
-
-
-
     const { data: profile } = await supabase.from('profiles').select('theme_brand').eq('id', user.id).single();
-
-
-
     brand = profile?.theme_brand || 'roosthub';
-
-
-
   }
 
-
-
-
-
-
-
   return (
-
-
-
     <html lang="en" suppressHydrationWarning>
-
-
-
       <body
-
-
-
         data-brand={brand}
-
-
-
         className={`${geistSans.variable} ${geistMono.variable} ${robotoCondensed.variable} ${teko.variable} ${spaceGrotesk.variable} antialiased bg-background text-foreground`}
-
-
-
       >
-
-
-
-
-
         <ThemeProvider
-
           attribute="class"
-
           defaultTheme="system"
-
           enableSystem
-
           disableTransitionOnChange
-
         >
-
-                    {children}
-
-                    
-
-                    {/* Mobile FAB for Selling */}
-
-                    <Link 
-
-                      href="/sell" 
-
-                      className="md:hidden fixed bottom-6 right-6 h-14 w-14 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl shadow-primary/40 z-50 animate-bounce-slow border-2 border-white/20"
-
-                    >
-
-                      <Plus className="h-8 w-8" />
-
-                    </Link>
-
-                  </ThemeProvider>
-
-                </body>
-
-              </html>
-
-              );
-
-            }
-
-            
-
-          
+          <div className="flex min-h-screen flex-col">
+            <Navbar />
+            <main className="flex-1 pb-20 md:pb-0">
+                {children}
+            </main>
+            <MobileNav />
+          </div>
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}
