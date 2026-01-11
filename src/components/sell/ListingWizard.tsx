@@ -152,15 +152,6 @@ export function ListingWizard({ userId }: WizardProps) {
         if (files.length > 0 && listingId) {
             setUploading(true);
             
-            // Verify bucket existence
-            const { data: bucket, error: bucketError } = await supabase.storage.getBucket('listing-media');
-            if (bucketError) {
-                console.error('Bucket check error:', bucketError);
-                alert("Storage bucket 'listing-media' not found. Please create it in your Supabase dashboard.");
-                setLoading(false);
-                return;
-            }
-
             for (const file of files) {
                 const path = `${userId}/${listingId}/${Date.now()}-${file.name}`;
                 console.log('Uploading to path:', path);
@@ -171,7 +162,7 @@ export function ListingWizard({ userId }: WizardProps) {
                 
                 if (uploadError) {
                     console.error('Upload error:', uploadError);
-                    alert(`Error uploading ${file.name}: ${uploadError.message}`);
+                    alert(`Error uploading ${file.name}: ${uploadError.message}. Make sure the bucket 'listing-media' is public in your dashboard.`);
                     continue;
                 }
 
