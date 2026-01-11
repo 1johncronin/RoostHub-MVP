@@ -155,7 +155,9 @@ export function ListingWizard({ userId }: WizardProps) {
                 }
             }
         }
-        window.location.href = '/marketplace';
+        
+        // Final redirect once everything is done
+        window.location.href = '/marketplace?success=true';
     } catch (e: any) {
         console.error(e);
         alert("Submission failed: " + (e.message || "Unknown error"));
