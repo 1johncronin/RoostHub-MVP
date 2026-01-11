@@ -80,3 +80,21 @@ export async function createListing(formData: FormData) {
   revalidatePath('/marketplace');
   redirect(`/marketplace`); // Redirect to feed
 }
+
+export async function markAsSold(listingId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) throw new Error('Unauthorized');
+
+  const { error } = await supabase
+    .from('listings')
+    .update({ status: 'sold' })
+    .eq('id', listingId)
+    .eq('seller_id', user.id);
+
+  if (error) throw error;
+
+  revalidatePath('/garage');
+  revalidatePath('/marketplace');
+}
