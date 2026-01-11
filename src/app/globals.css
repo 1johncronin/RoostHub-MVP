@@ -52,38 +52,38 @@
   --ring: 263 90% 50%;
 }
 
-/* Brand Theme Overrides (Targeting HTML for Global Priority) */
-:root[data-brand="ktm"], html[data-brand="ktm"] {
+/* Brand Theme Overrides (Universal Application) */
+[data-brand="ktm"] {
   --primary: 23 100% 50% !important; 
   --ring: 23 100% 50% !important;
   --primary-foreground: 0 0% 0% !important;
 }
-:root[data-brand="yamaha"], html[data-brand="yamaha"] {
+[data-brand="yamaha"] {
   --primary: 217 100% 50% !important;
   --ring: 217 100% 50% !important;
   --primary-foreground: 0 0% 100% !important;
 }
-:root[data-brand="honda"], html[data-brand="honda"] {
+[data-brand="honda"] {
   --primary: 0 100% 50% !important;
   --ring: 0 100% 50% !important;
   --primary-foreground: 0 0% 100% !important;
 }
-:root[data-brand="kawasaki"], html[data-brand="kawasaki"] {
+[data-brand="kawasaki"] {
   --primary: 85 100% 50% !important;
   --ring: 85 100% 50% !important;
   --primary-foreground: 0 0% 0% !important;
 }
-:root[data-brand="suzuki"], html[data-brand="suzuki"] {
+[data-brand="suzuki"] {
   --primary: 50 100% 50% !important;
   --ring: 50 100% 50% !important;
   --primary-foreground: 0 0% 0% !important;
 }
-:root[data-brand="husqvarna"], html[data-brand="husqvarna"] {
+[data-brand="husqvarna"] {
   --primary: 200 100% 30% !important;
   --ring: 200 100% 30% !important;
   --primary-foreground: 0 0% 100% !important;
 }
-:root[data-brand="gasgas"], html[data-brand="gasgas"] {
+[data-brand="gasgas"] {
   --primary: 0 100% 40% !important;
   --ring: 0 100% 40% !important;
   --primary-foreground: 0 0% 100% !important;

@@ -17,13 +17,11 @@ export function ModeProvider({ children, initialBrand = 'roosthub' }: { children
   const [mode, setMode] = useState<VisualMode>('normal');
   const [brand, setBrand] = useState(initialBrand);
 
-  // Sync state if initialBrand changes (e.g. on navigation)
   useEffect(() => {
-    setBrand(initialBrand);
-  }, [initialBrand]);
-
-  useEffect(() => {
+    // Aggressive application to both HTML and Body
     document.documentElement.setAttribute('data-brand', brand);
+    document.body.setAttribute('data-brand', brand);
+    console.log('DOM updated with brand:', brand);
   }, [brand]);
 
   return (

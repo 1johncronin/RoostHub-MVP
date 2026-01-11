@@ -30,7 +30,7 @@ export async function sendEmail({
 
   try {
     const { data, error } = await resendInstance.emails.send({
-      from: 'RoostHub <onboarding@resend.dev>', // Update this after domain verification
+      from: 'RoostHub <no-reply@getrookd.com>', 
       to,
       subject,
       text: text || '',
