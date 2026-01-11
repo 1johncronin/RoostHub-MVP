@@ -39,7 +39,16 @@ export async function updateSession(request: NextRequest) {
 
   const path = request.nextUrl.pathname
 
-  // 1. If user is logged in and tries to access login/auth, redirect to garage
+  // 1. Admin Protection
+  if (path.startsWith('/admin')) {
+    if (!user) return NextResponse.redirect(new URL('/login', request.url))
+    const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
+    if (profile?.role !== 'admin') {
+      return NextResponse.redirect(new URL('/', request.url)) // Boot non-admins to home
+    }
+  }
+
+  // 2. If user is logged in and tries to access login/auth, redirect to garage
   if (user && (path.startsWith('/login') || path.startsWith('/auth'))) {
     return NextResponse.redirect(new URL('/garage', request.url))
   }
