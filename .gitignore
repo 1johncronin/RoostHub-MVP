@@ -1,0 +1,4 @@
+# Ignore CLI env file
+.env.cli
+node_modules
+.DS_Store

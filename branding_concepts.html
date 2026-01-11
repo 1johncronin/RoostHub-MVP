@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoostHub Branding Concepts</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@800&family=Montserrat:wght@700&family=Space+Grotesk:wght@500;700&display=swap');
+
+        :root {
+            --bg-light: #ffffff;
+            --text-light: #111111;
+            --bg-dark: #111111;
+            --text-dark: #ffffff;
+            --accent: #6B2CF5; /* Electric/Ultraviolet Purple */
+            --gray: #888888;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 40px;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+            align-items: center;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .concept-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 1000px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .concept-header {
+            padding: 30px;
+            background: #eee;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .concept-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .concept-desc {
+            color: #666;
+            font-size: 0.95rem;
+            max-width: 600px;
+        }
+
+        .variants {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .variant {
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+        }
+
+        .variant.light {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+        }
+
+        .variant.dark {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .logo-lockup {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* CONCEPT 1: KINETIC ARC */
+        .c1-font {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -0.05em;
+            font-size: 2.5rem;
+        }
+
+        /* CONCEPT 2: APEX MONOGRAM */
+        .c2-font {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            font-size: 2rem;
+            text-transform: uppercase;
+        }
+
+        /* CONCEPT 3: HORIZON TRACK */
+        .c3-font {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.2rem;
+            letter-spacing: -0.02em;
+        }
+        .c3-roost { font-weight: 700; }
+        .c3-hub { font-weight: 300; opacity: 0.9; }
+
+        .app-icon-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .label {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 0.7rem;
+            opacity: 0.5;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>RoostHub Identity Concepts</h1>
+
+    <!-- CONCEPT 1 -->
+    <div class="concept-container">
+        <div class="concept-header">
+            <h2 class="concept-title">01. The Kinetic Arc</h2>
+            <p class="concept-desc">Aggressive, fast, dynamic. Represents the spray (roost) of dirt/snow. Italicized typography emphasizes forward momentum.</p>
+        </div>
+        <div class="variants">
+            <!-- Light Variant -->
+            <div class="variant light">
+                <span class="label">Primary / Light</span>
+                <div class="logo-lockup">
+                    <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 80 L50 70 L40 90 Z" fill="#111"/> <!-- Bottom shard -->
+                        <path d="M45 60 L75 45 L65 75 Z" fill="#111"/> <!-- Middle shard -->
+                        <path d="M70 35 L90 15 L85 50 Z" fill="#6B2CF5"/> <!-- Top Accent Shard -->
+                    </svg>
+                    <div class="c1-font">RoostHub</div>
+                </div>
+                <div class="app-icon-preview" style="background: #111;">
+                    <svg width="30" height="30" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 80 L50 70 L40 90 Z" fill="#fff"/>
+                        <path d="M45 60 L75 45 L65 75 Z" fill="#fff"/>
+                        <path d="M70 35 L90 15 L85 50 Z" fill="#6B2CF5"/>
+                    </svg>
+                </div>
+            </div>
+            <!-- Dark Variant -->
+            <div class="variant dark">
+                <span class="label">Dark Mode / Reversed</span>
+                <div class="logo-lockup">
+                    <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 80 L50 70 L40 90 Z" fill="#fff"/>
+                        <path d="M45 60 L75 45 L65 75 Z" fill="#fff"/>
+                        <path d="M70 35 L90 15 L85 50 Z" fill="#6B2CF5"/>
+                    </svg>
+                    <div class="c1-font">RoostHub</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONCEPT 2 -->
+    <div class="concept-container">
+        <div class="concept-header">
+            <h2 class="concept-title">02. The Apex Monogram</h2>
+            <p class="concept-desc">Trusted, structured, technical. A shield-like hexagon containing an 'R' that disintegrates into digital particles.</p>
+        </div>
+        <div class="variants">
+            <!-- Light Variant -->
+            <div class="variant light">
+                <span class="label">Primary / Light</span>
+                <div class="logo-lockup">
+                    <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 5 L90 25 V75 L50 95 L10 75 V25 Z" stroke="#111" stroke-width="6" fill="none"/>
+                        <path d="M35 25 H55 C65 25 65 45 55 45 H35 V25 Z" fill="#111"/> <!-- R Head -->
+                        <rect x="35" y="45" width="12" height="30" fill="#111"/> <!-- R Stem -->
+                        <rect x="52" y="50" width="8" height="8" fill="#111"/> <!-- Particle 1 -->
+                        <rect x="60" y="60" width="8" height="8" fill="#444"/> <!-- Particle 2 -->
+                        <rect x="68" y="70" width="8" height="8" fill="#6B2CF5"/> <!-- Particle Accent -->
+                    </svg>
+                    <div class="c2-font">ROOSTHUB</div>
+                </div>
+                <div class="app-icon-preview" style="background: #111;">
+                     <svg width="30" height="30" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 5 L90 25 V75 L50 95 L10 75 V25 Z" stroke="#fff" stroke-width="6" fill="none"/>
+                        <path d="M35 25 H55 C65 25 65 45 55 45 H35 V25 Z" fill="#fff"/> 
+                        <rect x="35" y="45" width="12" height="30" fill="#fff"/> 
+                        <rect x="52" y="50" width="8" height="8" fill="#ccc"/> 
+                        <rect x="60" y="60" width="8" height="8" fill="#999"/> 
+                        <rect x="68" y="70" width="8" height="8" fill="#6B2CF5"/> 
+                    </svg>
+                </div>
+            </div>
+            <!-- Dark Variant -->
+            <div class="variant dark">
+                <span class="label">Dark Mode / Reversed</span>
+                <div class="logo-lockup">
+                    <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 5 L90 25 V75 L50 95 L10 75 V25 Z" stroke="#fff" stroke-width="6" fill="none"/>
+                        <path d="M35 25 H55 C65 25 65 45 55 45 H35 V25 Z" fill="#fff"/>
+                        <rect x="35" y="45" width="12" height="30" fill="#fff"/>
+                        <rect x="52" y="50" width="8" height="8" fill="#ccc"/>
+                        <rect x="60" y="60" width="8" height="8" fill="#999"/>
+                        <rect x="68" y="70" width="8" height="8" fill="#6B2CF5"/>
+                    </svg>
+                    <div class="c2-font">ROOSTHUB</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONCEPT 3 -->
+    <div class="concept-container">
+        <div class="concept-header">
+            <h2 class="concept-title">03. The Horizon Track</h2>
+            <p class="concept-desc">Creator-focused. A terrain line that spikes into a 'Play' button. Combines the ride with the media.</p>
+        </div>
+        <div class="variants">
+            <!-- Light Variant -->
+            <div class="variant light">
+                <span class="label">Primary / Light</span>
+                <div class="logo-lockup">
+                    <svg width="80" height="60" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 80 H30 L50 40 L70 80 H120" stroke="#111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M60 20 L85 40 L60 60 V20 Z" fill="#6B2CF5"/> <!-- Play Button at Apex -->
+                    </svg>
+                    <div class="c3-font"><span class="c3-roost">ROOST</span><span class="c3-hub">HUB</span></div>
+                </div>
+                 <div class="app-icon-preview" style="background: #111;">
+                    <svg width="40" height="40" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 80 L50 30 L90 80" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M65 20 L90 40 L65 60 V20 Z" fill="#6B2CF5"/>
+                    </svg>
+                </div>
+            </div>
+            <!-- Dark Variant -->
+            <div class="variant dark">
+                <span class="label">Dark Mode / Reversed</span>
+                <div class="logo-lockup">
+                    <svg width="80" height="60" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 80 H30 L50 40 L70 80 H120" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M60 20 L85 40 L60 60 V20 Z" fill="#6B2CF5"/>
+                    </svg>
+                    <div class="c3-font"><span class="c3-roost">ROOST</span><span class="c3-hub">HUB</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
