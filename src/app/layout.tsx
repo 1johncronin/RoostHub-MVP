@@ -41,6 +41,11 @@ export const metadata: Metadata = {
   title: "RoostHub | Marketplace for Dirt & Snow",
   description: "Buy, sell, and showcase your dirt bikes, snowmobiles, and gear.",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.png",
+    apple: "/icon-512.png",
+  },
 };
 
 export const viewport = {
