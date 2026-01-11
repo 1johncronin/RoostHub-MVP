@@ -77,9 +77,42 @@ export function ListingWizard({ userId }: WizardProps) {
   const [uploading, setUploading] = useState(false);
   const supabase = createClient();
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [isVisionThinking, setIsVisionThinking] = useState(false);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-        setFiles(Array.from(e.target.files));
+        const selectedFiles = Array.from(e.target.files);
+        setFiles(selectedFiles);
+
+        // AI Vision: Analyze the first image if it's a machine
+        if (formData.type === 'machine' && selectedFiles[0]?.type.startsWith('image/')) {
+            setIsVisionThinking(true);
+            try {
+                const reader = new FileReader();
+                reader.onloadend = async () => {
+                    const base64 = (reader.result as string).split(',')[1];
+                    const res = await fetch('/api/ai/analyze-image', {
+                        method: 'POST',
+                        body: JSON.stringify({ image: base64 })
+                    });
+                    const data = await res.json();
+                    
+                    if (data.modifications) {
+                        const modsText = `\n\nIdentified Mods:\n- ${data.modifications.join('\n- ')}`;
+                        setFormData(prev => ({
+                            ...prev,
+                            description: prev.description + modsText,
+                            title: data.suggested_title || prev.title
+                        }));
+                    }
+                };
+                reader.readAsDataURL(selectedFiles[0]);
+            } catch (e) {
+                console.error("Vision analysis failed", e);
+            } finally {
+                setIsVisionThinking(false);
+            }
+        }
     }
   };
 
@@ -300,9 +333,10 @@ export function ListingWizard({ userId }: WizardProps) {
                     <Upload className="h-12 w-12 text-primary" />
                 </div>
                 <p className="font-black italic uppercase text-xl font-space-grotesk tracking-tight">
-                    {files.length > 0 ? `${files.length} Files Selected` : 'Drop photos here'}
+                    {isVisionThinking ? 'Roost Intelligence is Analyzing...' : files.length > 0 ? `${files.length} Files Selected` : 'Drop photos here'}
                 </p>
-                <p className="text-sm text-muted-foreground font-medium mt-2">Up to 10 photos + 1 high-res video clip</p>
+                {isVisionThinking && <Loader2 className="h-6 w-6 animate-spin text-primary mt-4" />}
+                {!isVisionThinking && <p className="text-sm text-muted-foreground font-medium mt-2">Up to 10 photos + 1 high-res video clip</p>}
                 <input 
                     id="file-upload"
                     type="file" 

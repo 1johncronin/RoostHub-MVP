@@ -32,6 +32,36 @@
   --chart-5: 27 87% 67%;
 }
 
+/* Brand Theme Overrides */
+[data-brand="ktm"] {
+  --primary: 23 100% 50%; 
+  --ring: 23 100% 50%;
+}
+[data-brand="yamaha"] {
+  --primary: 217 100% 50%;
+  --ring: 217 100% 50%;
+}
+[data-brand="honda"] {
+  --primary: 0 100% 50%;
+  --ring: 0 100% 50%;
+}
+[data-brand="kawasaki"] {
+  --primary: 100 100% 50%;
+  --ring: 100 100% 50%;
+}
+[data-brand="suzuki"] {
+  --primary: 50 100% 50%;
+  --ring: 50 100% 50%;
+}
+[data-brand="husqvarna"] {
+  --primary: 200 100% 30%;
+  --ring: 200 100% 30%;
+}
+[data-brand="gasgas"] {
+  --primary: 0 100% 40%;
+  --ring: 0 100% 40%;
+}
+
 .dark {
   --background: 0 0% 3.9%;
   --foreground: 0 0% 98%;

@@ -4,6 +4,7 @@ import { Bike, Settings, Plus, Share2, ShieldCheck, Wrench, AlertTriangle, Histo
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { getDueServices } from '@/lib/data/maintenance-intelligence';
+import { HistoryButton } from '@/components/garage/HistoryButton';
 
 export default async function GaragePage() {
   const supabase = await createClient();
@@ -21,7 +22,7 @@ export default async function GaragePage() {
 
   const { data: listings } = await supabase
     .from('listings')
-    .select('*, machines(*)')
+    .select('*, machines(*), maintenance_logs(*)')
     .eq('seller_id', user.id)
     .order('created_at', { ascending: false });
 
@@ -118,9 +119,7 @@ export default async function GaragePage() {
                                     <button className="px-4 py-2 bg-muted hover:bg-primary hover:text-primary-foreground rounded-lg text-xs font-black uppercase italic transition-all flex items-center gap-2">
                                         <Wrench className="h-3 w-3" /> Log Service
                                     </button>
-                                    <button className="px-4 py-2 bg-muted hover:bg-primary hover:text-primary-foreground rounded-lg text-xs font-black uppercase italic transition-all flex items-center gap-2">
-                                        <History className="h-3 w-3" /> History
-                                    </button>
+                                    <HistoryButton machine={l.machines} logs={l.maintenance_logs} />
                                     <form action={async () => {
                                         'use server';
                                         const { createBoostCheckout } = await import('@/app/actions/stripe');

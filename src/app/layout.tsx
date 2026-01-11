@@ -45,25 +45,95 @@ import { ThemeProvider } from "@/components/theme-provider";
 
 
 
-export default function RootLayout({
+import { createClient } from "@/lib/supabase/server";
+
+
+
+
+
+
+
+export default async function RootLayout({
+
+
 
   children,
 
+
+
 }: Readonly<{
+
+
 
   children: React.ReactNode;
 
+
+
 }>) {
+
+
+
+  const supabase = await createClient();
+
+
+
+  const { data: { user } } = await supabase.auth.getUser();
+
+
+
+  
+
+
+
+  let brand = 'roosthub';
+
+
+
+  if (user) {
+
+
+
+    const { data: profile } = await supabase.from('profiles').select('theme_brand').eq('id', user.id).single();
+
+
+
+    brand = profile?.theme_brand || 'roosthub';
+
+
+
+  }
+
+
+
+
+
+
 
   return (
 
+
+
     <html lang="en" suppressHydrationWarning>
+
+
 
       <body
 
+
+
+        data-brand={brand}
+
+
+
         className={`${geistSans.variable} ${geistMono.variable} ${robotoCondensed.variable} ${teko.variable} ${spaceGrotesk.variable} antialiased bg-background text-foreground`}
 
+
+
       >
+
+
+
+
 
         <ThemeProvider
 

@@ -1,14 +1,14 @@
 import { createClient } from '@/lib/supabase/server';
-import { ListingCard } from '@/components/marketplace/ListingCard';
-import { FilterBar } from '@/components/marketplace/FilterBar';
+import { MarketplaceContainer } from '@/components/marketplace/MarketplaceContainer';
 
 export default async function MarketplacePage({
   searchParams,
 }: {
-  searchParams: Promise<{ type?: string; q?: string; sort?: string }>;
+  searchParams: Promise<{ type?: string; q?: string; sort?: string; view?: string }>;
 }) {
   const supabase = await createClient();
   const params = await searchParams;
+  const initialView = params.view || 'grid';
   const type = params.type;
   const query = params.q;
   const sort = params.sort || 'newest';
@@ -27,11 +27,9 @@ export default async function MarketplacePage({
   }
   
   if (query) {
-    // Search in title and description
     dbQuery = dbQuery.or(`title.ilike.%${query}%,description.ilike.%${query}%`);
   }
 
-  // Sorting logic
   if (sort === 'newest') {
     dbQuery = dbQuery.order('created_at', { ascending: false });
   } else if (sort === 'price_low') {
@@ -42,7 +40,6 @@ export default async function MarketplacePage({
 
   const { data: listings } = await dbQuery;
 
-  // Placeholder data if DB is empty (for demo purposes)
   const displayListings = listings?.length ? listings : [
     {
       id: 'demo-1',
@@ -50,64 +47,33 @@ export default async function MarketplacePage({
       price: 9800,
       currency: 'USD',
       location_name: 'Hood River, OR',
+      location_lat: 45.7082,
+      location_lng: -121.5175,
       type: 'machine',
+      is_featured: true,
       machines: { year: 2024, make: 'KTM', model: '300 XC-W' },
       listing_media: [{ url: 'https://images.unsplash.com/photo-1558981806-ec527fa84c3d?auto=format&fit=crop&w=800&q=80' }]
     },
     {
       id: 'demo-2',
-      title: 'Snowbike Kit - Timbersled Aro (Demo)',
-      price: 4500,
+      title: 'Secure Shop Space (Demo)',
+      price: 150,
       currency: 'USD',
       location_name: 'Bend, OR',
-      type: 'part',
-      listing_media: [{ url: 'https://images.unsplash.com/photo-1517502166878-35c93a0072f0?auto=format&fit=crop&w=800&q=80' }]
-    },
-    {
-      id: 'demo-3',
-      title: 'Fox V3 Helmet - Medium (Demo)',
-      price: 350,
-      currency: 'USD',
-      location_name: 'Portland, OR',
-      type: 'gear',
+      location_lat: 44.0582,
+      location_lng: -121.3153,
+      type: 'storage',
       listing_media: []
     }
   ];
 
   return (
     <div className="container min-h-screen py-8">
-      <div className="flex flex-col gap-6">
-        <div>
-          <h1 className="text-4xl font-roboto-condensed font-bold italic uppercase tracking-tight">Marketplace</h1>
-          <p className="text-muted-foreground">Find your next ride, part, or kit.</p>
-        </div>
-
-        <FilterBar currentType={type} />
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {displayListings.map((listing: any) => (
-            <ListingCard
-              key={listing.id}
-              id={listing.id}
-              title={listing.title}
-              price={listing.price}
-              currency={listing.currency}
-              location={listing.location_name}
-              imageUrl={listing.listing_media?.[0]?.url}
-              type={listing.type}
-              make={listing.machines?.make}
-              model={listing.machines?.model}
-              year={listing.machines?.year}
-            />
-          ))}
-        </div>
-        
-        {displayListings.length === 0 && (
-            <div className="py-20 text-center text-muted-foreground">
-                No listings found. Be the first to post!
-            </div>
-        )}
-      </div>
+      <MarketplaceContainer 
+        listings={displayListings} 
+        initialView={initialView} 
+        params={params} 
+      />
     </div>
   );
 }

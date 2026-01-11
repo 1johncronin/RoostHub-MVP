@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { CheckCircle, XCircle, Phone, Mail, ShieldCheck, Loader2 } from 'lucide-react';
+import { CheckCircle, XCircle, Phone, Mail, ShieldCheck, Loader2, Bike } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function SettingsPage() {
@@ -68,13 +68,61 @@ export default function SettingsPage() {
     setVerifyingPhone(false);
   }
 
+  const BRANDS = [
+    { id: 'roosthub', name: 'RoostHub (Purple)', color: 'bg-[#7C3AED]' },
+    { id: 'ktm', name: 'KTM (Orange)', color: 'bg-[#FF6600]' },
+    { id: 'yamaha', name: 'Yamaha (Blue)', color: 'bg-[#0000FF]' },
+    { id: 'honda', name: 'Honda (Red)', color: 'bg-[#FF0000]' },
+    { id: 'kawasaki', name: 'Kawasaki (Green)', color: 'bg-[#00FF00]' },
+    { id: 'suzuki', name: 'Suzuki (Yellow)', color: 'bg-[#FFFF00]' },
+  ];
+
+  async function handleSetBrand(brandId: string) {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+        await supabase.from('profiles').update({ theme_brand: brandId }).eq('id', user.id);
+        document.body.setAttribute('data-brand', brandId);
+        setProfile((prev: any) => ({ ...prev, theme_brand: brandId }));
+    }
+  }
+
   if (loading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" /></div>;
 
   return (
     <div className="container max-w-2xl py-12">
-      <h1 className="text-3xl font-roboto-condensed font-bold italic uppercase mb-8 text-primary">Trust & Verification</h1>
+      <h1 className="text-3xl font-black italic uppercase font-space-grotesk mb-8 text-primary tracking-tight">Customization</h1>
       
-      <div className="space-y-6">
+      <div className="space-y-8">
+        {/* Brand Theme Card */}
+        <div className="bg-card border border-border p-8 rounded-3xl space-y-6 shadow-xl">
+            <div className="flex items-center gap-4">
+                <div className="p-3 bg-primary/10 rounded-2xl">
+                    <Bike className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                    <h3 className="font-black text-xl italic uppercase font-space-grotesk">Choose your Brand</h3>
+                    <p className="text-sm text-muted-foreground font-medium uppercase tracking-tight">Personalize the app colors for your machine.</p>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {BRANDS.map((b) => (
+                    <button
+                        key={b.id}
+                        onClick={() => handleSetBrand(b.id)}
+                        className={cn(
+                            "flex items-center gap-3 p-3 rounded-2xl border-2 transition-all group",
+                            profile?.theme_brand === b.id ? "border-primary bg-primary/5" : "border-border hover:border-primary/30"
+                        )}
+                    >
+                        <div className={cn("h-4 w-4 rounded-full shadow-inner", b.color)} />
+                        <span className="text-[10px] font-black uppercase italic truncate">{b.name}</span>
+                    </button>
+                ))}
+            </div>
+        </div>
+
+        <h2 className="text-2xl font-black italic uppercase font-space-grotesk text-primary tracking-tight mt-12">Trust & Verification</h2>
         {/* Email Verification Card */}
         <div className="bg-card border border-border p-6 rounded-xl flex items-center justify-between">
           <div className="flex items-center gap-4">

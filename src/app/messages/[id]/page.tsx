@@ -23,7 +23,12 @@ export default function ChatThreadPage({ params }: { params: Promise<{ id: strin
 
       const { data: threadData } = await supabase
         .from('message_threads')
-        .select('*, listings(title)')
+        .select(`
+            *, 
+            listings(title),
+            buyer:profiles!message_threads_buyer_id_fkey(username),
+            seller:profiles!message_threads_seller_id_fkey(username)
+        `)
         .eq('id', threadId)
         .single();
       setThread(threadData);
@@ -97,16 +102,32 @@ export default function ChatThreadPage({ params }: { params: Promise<{ id: strin
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((m) => {
+      <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        {messages.map((m, i) => {
           const isMe = m.sender_id === user?.id;
+          const showAvatar = i === 0 || messages[i-1].sender_id !== m.sender_id;
+          
           return (
-            <div key={m.id} className={cn("flex", isMe ? "justify-end" : "justify-start")}>
-              <div className={cn(
-                "max-w-[80%] px-4 py-2 rounded-2xl text-sm font-medium",
-                isMe ? "bg-primary text-white rounded-br-none shadow-lg shadow-primary/20" : "bg-card border border-border rounded-bl-none"
-              )}>
-                {m.content}
+            <div key={m.id} className={cn("flex flex-col", isMe ? "items-end" : "items-start")}>
+              <div className={cn("flex items-end gap-2 max-w-[85%]", isMe ? "flex-row-reverse" : "flex-row")}>
+                {!isMe && showAvatar && (
+                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-[10px] italic border border-primary/20 shrink-0 mb-1">
+                        {thread?.buyer_id === m.sender_id ? thread?.buyer?.username?.[0] : thread?.seller?.username?.[0]}
+                    </div>
+                )}
+                {!isMe && !showAvatar && <div className="w-8" />}
+                
+                <div className={cn(
+                    "px-5 py-3 rounded-2xl text-sm font-medium shadow-sm transition-all",
+                    isMe 
+                        ? "bg-primary text-white rounded-br-none shadow-[0_4px_15px_-5px_rgba(107,44,245,0.4)]" 
+                        : "bg-card border border-border rounded-bl-none text-foreground"
+                )}>
+                    {m.content}
+                </div>
+              </div>
+              <div className={cn("text-[9px] font-black uppercase italic tracking-widest text-muted-foreground mt-1 mx-10")}>
+                {new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </div>
             </div>
           );
