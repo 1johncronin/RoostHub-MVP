@@ -47,29 +47,54 @@ export async function createListing(formData: FormData) {
 
   // 2. Insert Machine details if applicable
   if (type === 'machine') {
-    const year = parseInt(formData.get('year') as string);
+    const yearStr = formData.get('year') as string;
     const make = formData.get('make') as string;
     const model = formData.get('model') as string;
     const vin = formData.get('vin') as string;
-    const hours = parseFloat(formData.get('hours') as string) || null;
-    const mileage = parseFloat(formData.get('miles') as string) || null;
+    const hoursStr = formData.get('hours') as string;
+    const milesStr = formData.get('miles') as string;
+
+    // Debug logging
+    console.log('Machine form data:', { yearStr, make, model, vin, hoursStr, milesStr });
+
+    // Validate required fields
+    const year = parseInt(yearStr);
+    if (!yearStr || isNaN(year)) {
+      console.error('Invalid year:', yearStr);
+      return { error: 'Year is required for machine listings' };
+    }
+    if (!make || make.trim() === '') {
+      console.error('Invalid make:', make);
+      return { error: 'Make/Brand is required for machine listings' };
+    }
+    if (!model || model.trim() === '') {
+      console.error('Invalid model:', model);
+      return { error: 'Model is required for machine listings' };
+    }
+
+    const hours = hoursStr ? parseFloat(hoursStr) : null;
+    const mileage = milesStr ? parseFloat(milesStr) : null;
+
+    const machineData = {
+      listing_id: listing.id,
+      year,
+      make: make.trim(),
+      model: model.trim(),
+      vin: vin?.trim() || null,
+      hours: hours && !isNaN(hours) ? hours : null,
+      mileage: mileage && !isNaN(mileage) ? mileage : null
+    };
+    console.log('Inserting machine:', machineData);
 
     const { error: machineError } = await supabase
       .from('machines')
-      .insert({
-        listing_id: listing.id,
-        year,
-        make,
-        model,
-        vin,
-        hours,
-        mileage
-      });
+      .insert(machineData);
 
     if (machineError) {
        console.error('Machine error:', machineError);
        return { error: `Machine details failed: ${machineError.message}` };
     }
+    console.log('Machine inserted successfully');
   }
 
   if (type === 'storage') {
