@@ -75,7 +75,19 @@ export function ListingWizard({ userId, initialData }: WizardProps) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => {
+      const updated = { ...prev, [name]: value };
+      // Auto-generate title when year, make, or model changes
+      if ((name === 'year' || name === 'make' || name === 'model') && prev.type === 'machine') {
+        const year = name === 'year' ? value : prev.year;
+        const make = name === 'make' ? value : prev.make;
+        const model = name === 'model' ? value : prev.model;
+        if (year && make && model) {
+          updated.title = `${year} ${make} ${model}`;
+        }
+      }
+      return updated;
+    });
   };
 
   const selectSuggestion = (model: string) => {

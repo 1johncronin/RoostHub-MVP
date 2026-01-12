@@ -68,6 +68,7 @@ export async function createListing(formData: FormData) {
 
     if (machineError) {
        console.error('Machine error:', machineError);
+       return { error: `Machine details failed: ${machineError.message}` };
     }
   }
 
@@ -85,6 +86,7 @@ export async function createListing(formData: FormData) {
 
     if (storageError) {
         console.error('Storage space error:', storageError);
+        return { error: `Storage details failed: ${storageError.message}` };
     }
   }
 
