@@ -1,4 +1,4 @@
-import { ArrowLeft, Mountain, Wrench, Snowflake, Zap, Heart } from 'lucide-react';
+import { ArrowLeft, Mountain, Wrench, Snowflake, Zap } from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata = {
@@ -38,7 +38,7 @@ export default function AboutPage() {
               <div className="aspect-square bg-gradient-to-br from-primary/20 to-primary/5 rounded-3xl flex items-center justify-center border border-primary/20">
                 <div className="text-center p-6">
                   <div className="text-6xl font-black text-primary mb-2">JC</div>
-                  <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Founder</p>
+                  <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Co-Founder</p>
                 </div>
               </div>
             </div>
@@ -46,7 +46,7 @@ export default function AboutPage() {
             <div className="md:col-span-2 space-y-6">
               <div>
                 <h2 className="text-3xl font-black italic uppercase font-space-grotesk mb-2">Jack Cronin</h2>
-                <p className="text-primary font-bold">Founder & Chief Throttle Twister</p>
+                <p className="text-primary font-bold">Co-Founder, RoostHub</p>
               </div>
 
               <p className="text-muted-foreground leading-relaxed">
@@ -130,38 +130,8 @@ export default function AboutPage() {
             <ReasonCard
               number="04"
               title="Built with respect"
-              description="RoostHub is built by Transparency Technologies because that's what we believe in—being straight up, honest, and building something the community can trust."
+              description="RoostHub is built on transparency—being straight up, honest, and building something the community can trust."
             />
-          </div>
-        </div>
-      </section>
-
-      {/* Company Info */}
-      <section className="py-16 px-6 bg-muted/30">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-card border border-border rounded-2xl p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <Heart className="h-6 w-6 text-primary" />
-              <h2 className="text-xl font-black uppercase">The Company</h2>
-            </div>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <p className="text-sm text-muted-foreground mb-1">Legal Entity</p>
-                <p className="font-bold">Transparency Technologies, LLC</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground mb-1">Headquarters</p>
-                <p className="font-bold">Breckenridge, Colorado</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground mb-1">Founded</p>
-                <p className="font-bold">2024</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground mb-1">Mission</p>
-                <p className="font-bold">Building transparent, community-first platforms</p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
