@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Search, PlusSquare, Car, MessageSquare, Menu, X, Star, BookOpen } from 'lucide-react';
+import { Home, Search, PlusSquare, Bike, MessageSquare, Menu, X, Star, BookOpen, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 
@@ -14,7 +14,7 @@ export function MobileNav() {
     { label: 'Home', icon: Home, href: '/' },
     { label: 'Explore', icon: Search, href: '/marketplace' },
     { label: 'Sell', icon: PlusSquare, href: '/sell' },
-    { label: 'Garage', icon: Car, href: '/garage' },
+    { label: 'Garage', icon: Bike, href: '/garage' },
     { label: 'Inbox', icon: MessageSquare, href: '/messages' },
   ];
 
@@ -22,7 +22,8 @@ export function MobileNav() {
     { label: 'Education', icon: BookOpen, href: '/education' },
     { label: 'DJ Booth', icon: Star, href: '/dj-booth' },
     { label: 'Marketplace', icon: Search, href: '/marketplace' },
-    { label: 'My Garage', icon: Car, href: '/garage' },
+    { label: 'My Garage', icon: Bike, href: '/garage' },
+    { label: 'About', icon: User, href: '/about' },
   ];
 
   // Close menu on navigation

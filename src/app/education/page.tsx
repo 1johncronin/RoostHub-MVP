@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { BookOpen, Flame, Zap, Shield, Scale, Users, Bike, Snowflake, Car, ChevronRight, Calculator, Wrench, ShoppingCart, MessageSquare, GraduationCap, Mountain, Gauge } from 'lucide-react';
+import { BookOpen, Flame, Zap, Shield, Scale, Users, Bike, Snowflake, Car, ChevronRight, Calculator, Wrench, ShoppingCart, MessageSquare, GraduationCap, Mountain, Gauge, MapPin, Loader2 } from 'lucide-react';
+import { getLocationFromZipcode } from '@/app/actions/zipcode';
 
 export default function EducationPage() {
   return (
@@ -305,8 +306,23 @@ function CCCalculator() {
 
 // Altitude Power Loss Calculator
 function AltitudeCalculator() {
-  const [altitude, setAltitude] = useState(8000);
+  const [zipcode, setZipcode] = useState('');
+  const [altitude, setAltitude] = useState(5000);
+  const [location, setLocation] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const powerLoss = Math.round((altitude / 1000) * 3);
+
+  async function handleZipLookup() {
+    if (zipcode.length !== 5) return;
+    setLoading(true);
+    const result = await getLocationFromZipcode(zipcode);
+    if (result.data) {
+      const elev = result.data.elevation_ft || 1000;
+      setAltitude(elev);
+      setLocation(`${result.data.city}, ${result.data.stateAbbr}`);
+    }
+    setLoading(false);
+  }
 
   return (
     <div className="bg-card border border-border rounded-2xl p-6">
@@ -315,18 +331,48 @@ function AltitudeCalculator() {
         Altitude Power Loss
       </h3>
       <p className="text-sm text-muted-foreground mb-4">
-        Naturally aspirated engines lose ~3% power per 1,000ft. This is why mountain sleds go turbo.
+        Naturally aspirated engines lose ~3% power per 1,000ft. Enter your zip to see your local power loss.
       </p>
       <div className="space-y-4">
+        {/* Zipcode Quick Lookup */}
         <div>
-          <label className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-2 block">Elevation (ft)</label>
+          <label className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-2 block">Your Zipcode</label>
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                value={zipcode}
+                onChange={(e) => setZipcode(e.target.value.replace(/\D/g, '').slice(0, 5))}
+                onKeyDown={(e) => e.key === 'Enter' && handleZipLookup()}
+                placeholder="Enter zip"
+                className="w-full p-3 pl-10 rounded-xl bg-muted/50 border border-border font-bold"
+                maxLength={5}
+              />
+              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            </div>
+            <button
+              onClick={handleZipLookup}
+              disabled={zipcode.length !== 5 || loading}
+              className="px-4 py-3 bg-primary text-white rounded-xl font-bold disabled:opacity-50"
+            >
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Go'}
+            </button>
+          </div>
+          {location && (
+            <p className="text-sm text-primary font-bold mt-2">{location} • {altitude.toLocaleString()} ft</p>
+          )}
+        </div>
+
+        {/* Manual Slider */}
+        <div>
+          <label className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-2 block">Or adjust manually</label>
           <input
             type="range"
             min="0"
             max="14000"
             step="500"
             value={altitude}
-            onChange={(e) => setAltitude(Number(e.target.value))}
+            onChange={(e) => { setAltitude(Number(e.target.value)); setLocation(null); }}
             className="w-full accent-primary"
           />
           <div className="flex justify-between text-sm text-muted-foreground mt-1">
@@ -335,6 +381,7 @@ function AltitudeCalculator() {
             <span>14,000 ft</span>
           </div>
         </div>
+
         <div className="p-4 bg-primary/10 rounded-xl border border-primary/20">
           <p className="text-sm text-muted-foreground">Estimated power loss (NA engine):</p>
           <p className="text-2xl font-black text-primary">~{powerLoss}%</p>

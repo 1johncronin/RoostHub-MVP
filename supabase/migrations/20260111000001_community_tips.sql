@@ -45,3 +45,12 @@ CREATE INDEX idx_community_tips_created_at ON community_tips(created_at DESC);
 
 -- Add is_admin column to profiles if not exists
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;
+
+-- Add location columns to profiles for zipcode-based features
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS city TEXT;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS state TEXT;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS zipcode TEXT;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS country TEXT DEFAULT 'US';
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS latitude DECIMAL(10, 8);
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS longitude DECIMAL(11, 8);
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS elevation_ft INTEGER;
