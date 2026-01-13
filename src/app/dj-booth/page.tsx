@@ -9,6 +9,8 @@ export default function DJBoothPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState('Hype Reel (15s)');
+  const [activeTool, setActiveTool] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const supabase = createClient();
 
@@ -36,7 +38,7 @@ export default function DJBoothPage() {
         console.log('Uploading DJ reel to path:', fileName);
 
         const { data: uploadData, error: uploadError } = await supabase.storage
-            .from('listing-media') 
+            .from('reels') 
             .upload(fileName, selectedFile);
 
         if (uploadError) {
@@ -44,7 +46,7 @@ export default function DJBoothPage() {
             throw uploadError;
         }
 
-        const { data: { publicUrl } } = supabase.storage.from('listing-media').getPublicUrl(fileName);
+        const { data: { publicUrl } } = supabase.storage.from('reels').getPublicUrl(fileName);
 
         // 2. Create Post
         // Optional: Let user link a listing here. For MVP we'll grab the latest machine.
@@ -64,7 +66,7 @@ export default function DJBoothPage() {
                 media_url: publicUrl,
                 post_type: 'dj_reel',
                 linked_listing_id: latestListing?.id || null,
-                caption: "New build highlights from the DJ Booth! 🏁"
+                caption: `New ${selectedTemplate} generated from the DJ Booth! 🏁`
             })
             .select()
             .single();
@@ -74,7 +76,7 @@ export default function DJBoothPage() {
         // 3. Create Render Job (Background)
         await supabase.from('render_jobs').insert({
             user_id: user.id,
-            template_id: 'hype-reel',
+            template_id: selectedTemplate,
             status: 'pending',
             input_assets: [fileName]
         });
@@ -124,13 +126,22 @@ export default function DJBoothPage() {
             {/* Timeline / Controls Stub */}
             <div className="bg-card border border-border p-4 rounded-xl flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                    <button className="p-2 hover:bg-accent rounded-md text-muted-foreground hover:text-foreground">
+                    <button 
+                        onClick={() => setActiveTool(activeTool === 'trim' ? null : 'trim')}
+                        className={cn("p-2 rounded-md transition-colors", activeTool === 'trim' ? "bg-primary text-primary-foreground" : "hover:bg-accent text-muted-foreground hover:text-foreground")}
+                    >
                         <Scissors className="h-5 w-5" />
                     </button>
-                    <button className="p-2 hover:bg-accent rounded-md text-muted-foreground hover:text-foreground">
+                    <button 
+                        onClick={() => setActiveTool(activeTool === 'music' ? null : 'music')}
+                        className={cn("p-2 rounded-md transition-colors", activeTool === 'music' ? "bg-primary text-primary-foreground" : "hover:bg-accent text-muted-foreground hover:text-foreground")}
+                    >
                         <Music className="h-5 w-5" />
                     </button>
-                    <button className="p-2 hover:bg-accent rounded-md text-muted-foreground hover:text-foreground">
+                    <button 
+                        onClick={() => setActiveTool(activeTool === 'video' ? null : 'video')}
+                        className={cn("p-2 rounded-md transition-colors", activeTool === 'video' ? "bg-primary text-primary-foreground" : "hover:bg-accent text-muted-foreground hover:text-foreground")}
+                    >
                         <Video className="h-5 w-5" />
                     </button>
                 </div>
@@ -146,8 +157,17 @@ export default function DJBoothPage() {
             <div className="bg-card border border-border rounded-xl p-6 space-y-4">
                 <h3 className="font-bold">Templates</h3>
                 <div className="space-y-2">
-                    {['Hype Reel (15s)', 'Slow Motion', 'Story Mode (9:16)'].map((t, i) => (
-                        <button key={i} className="w-full text-left px-4 py-3 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-all text-sm font-medium">
+                    {['Hype Reel (15s)', 'Slow Motion', 'Story Mode (9:16)'].map((t) => (
+                        <button 
+                            key={t} 
+                            onClick={() => setSelectedTemplate(t)}
+                            className={cn(
+                                "w-full text-left px-4 py-3 rounded-lg border transition-all text-sm font-medium",
+                                selectedTemplate === t 
+                                    ? "border-primary bg-primary/10 text-primary" 
+                                    : "border-border hover:border-primary hover:bg-primary/5"
+                            )}
+                        >
                             {t}
                         </button>
                     ))}
