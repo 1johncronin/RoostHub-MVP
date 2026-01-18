@@ -13,6 +13,18 @@ export function Footer() {
               © {new Date().getFullYear()} Transparency Technologies, LLC<br />
               All rights reserved.
             </p>
+            {/* Transparency Badge */}
+            <a
+              href="#"
+              className="inline-flex items-center gap-2 mt-2 px-3 py-2 border border-border rounded-md bg-background/50 hover:border-primary/50 transition-colors w-fit"
+            >
+              <svg width="20" height="16" viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="5" width="90" height="18" rx="2" fill="currentColor" className="text-foreground"/>
+                <rect x="5" y="31" width="90" height="18" rx="2" fill="currentColor" className="text-foreground"/>
+                <rect x="5" y="57" width="90" height="18" rx="2" fill="currentColor" className="text-foreground"/>
+              </svg>
+              <span className="text-xs text-muted-foreground tracking-wider">TRUST BY TRANSPARENCY</span>
+            </a>
           </div>
           <div className="flex flex-col gap-2 text-sm text-muted-foreground">
             <h3 className="font-semibold text-foreground">Marketplace</h3>
